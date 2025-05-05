@@ -58,3 +58,34 @@ pnpm install
 
 # 启动开发服务器
 pnpm dev
+```
+### 2. 使用 Docker 部署
+
+```bash
+docker pull yorlg/duckfolio:latest
+docker run -p 3000:3000 yorlg/duckfolio:latest
+```
+访问 http://localhost:3000 查看网站
+
+使用 Docker Compose 部署
+
+```bash
+services:
+  duckfolio:
+    image: yorlg/duckfolio:latest
+    container_name: duckfolio
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+```
+然后运行:
+```bash
+docker-compose up -d
+```
+自行构建 Docker 镜像
+```bash
+git clone https://github.com/Yorlg/Duckfolio.git
+cd duckfolio
+docker build -t duckfolio .
+docker run -p 3000:3000 duckfolio
+```
