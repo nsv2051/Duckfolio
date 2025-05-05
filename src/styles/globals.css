@@ -1,0 +1,73 @@
+@import 'tailwindcss';
+
+@import 'tw-animate-css';
+
+@custom-variant dark (.dark &);
+
+@import './theme.css';
+
+@layer base {
+  * {
+    @apply border-neutral-200 dark:border-neutral-800 outline-blue-500/50;
+  }
+  body {
+    @apply bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100;
+  }
+}
+
+@layer utilities {
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-float-slow {
+    animation: float 15s ease-in-out infinite;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes float {
+    0% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+    100% {
+      transform: translateY(0px);
+    }
+  }
+
+  /* Gradient text utility */
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500;
+  }
+
+  /* Glass effect utility */
+  .glass {
+    @apply backdrop-blur-md bg-white/70 dark:bg-black/70 border border-white/20 dark:border-white/10;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-blue-500/30 rounded-full hover:bg-blue-500/50 transition-colors;
+}
+
+/* Text selection */
+::selection {
+  @apply bg-blue-500/20 text-blue-500;
+}
