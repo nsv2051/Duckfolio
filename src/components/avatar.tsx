@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import { useProfileStore } from '@/lib/store';
 import { Avatar as UIAvatar, AvatarImage, AvatarFallback } from '@/packages/ui/avatar';
 

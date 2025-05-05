@@ -13,7 +13,7 @@
 - 🎨 采用 **Tailwind CSS 4** 实现原子化、响应式布局
 - 🌗 支持 **深色/浅色主题自动切换**
 - 💫 利用 **Framer Motion** 增添自然平滑的过渡动画
-- 🧩 使用 **Radix UI + Lucide Icons** 构建现代交互组件
+- 🧩 使用 **Shadcn UI** 构建现代交互组件
 - 🧠 通过 **Zustand** 管理全局状态（如主题）
 - 📱 完全响应式，适配移动端和大屏设备
 - 🧼 结构清晰，易于维护和定制
@@ -37,7 +37,7 @@
 | [Next.js](https://nextjs.org/)                            | 框架         |
 | [Turbopack](https://turbo.build/pack)                     | 构建工具     |
 | [Tailwind CSS](https://tailwindcss.com/)                  | 样式框架     |
-| [Radix UI](https://www.radix-ui.com/)                     | 无障碍组件库 |
+| [Shadcn UI](https://ui.shadcn.com/ )                      | 无障碍组件库 |
 | [Framer Motion](https://www.framer.com/motion/)           | 动画库       |
 | [Zustand](https://github.com/pmndrs/zustand)              | 状态管理     |
 | [next-themes](https://github.com/pacocoursey/next-themes) | 主题切换     |
