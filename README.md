@@ -93,5 +93,4 @@ docker build -t duckfolio .
 docker run -p 3000:3000 duckfolio
 ```
 
-> [!INFO]  
-> 项目的配置文件位于 `public/profile.json`，你可以在这里修改个人信息、社交链接等内容。
+项目的配置文件位于 `public/profile.json`，你可以在这里修改个人信息、社交链接等内容。

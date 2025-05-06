@@ -1,5 +1,5 @@
 import { setupDevPlatform } from '@cloudflare/next-on-pages/next-dev';
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   /* config options here */
@@ -81,12 +81,14 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
-    ]
-  }
+    ],
+  },
 };
 
 if (process.env.NODE_ENV === 'development') {
-  await setupDevPlatform();
+  (async () => {
+    await setupDevPlatform();
+  })();
 }
 
 export default nextConfig;

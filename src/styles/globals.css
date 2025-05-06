@@ -1,19 +1,8 @@
 @import 'tailwindcss';
-
+@import './theme.css';
 @import 'tw-animate-css';
 
-@custom-variant dark (.dark &);
-
-@import './theme.css';
-
-@layer base {
-  * {
-    @apply border-neutral-200 dark:border-neutral-800 outline-blue-500/50;
-  }
-  body {
-    @apply bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100;
-  }
-}
+@custom-variant dark (&:is(.dark *));
 
 @layer utilities {
   .animate-float {
@@ -46,28 +35,17 @@
       transform: translateY(0px);
     }
   }
+}
 
-  /* Gradient text utility */
-  .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500;
+@layer base {
+  * {
+    @apply border-neutral-200 dark:border-neutral-800 outline-blue-500/50;
   }
-
-  /* Glass effect utility */
-  .glass {
-    @apply backdrop-blur-md bg-white/70 dark:bg-black/70 border border-white/20 dark:border-white/10;
+  body {
+    @apply bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100;
   }
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-thumb {
-  @apply bg-blue-500/30 rounded-full hover:bg-blue-500/50 transition-colors;
-}
-
-/* Text selection */
 ::selection {
-  @apply bg-blue-500/20 text-blue-500;
+  @apply bg-[var(--theme-primary)]/20 text-[var(--theme-primary)];
 }
