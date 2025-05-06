@@ -46,6 +46,44 @@
   }
 }
 
+/* 文字选择 */
 ::selection {
   @apply bg-[var(--theme-primary)]/20 text-[var(--theme-primary)];
+}
+
+/* 用于主题切换 */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.4s;
+}
+
+::view-transition-old(root) {
+  animation: none;
+}
+
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+.dark::view-transition-old(root) {
+  z-index: 1;
+}
+
+.dark::view-transition-new(root) {
+  z-index: 999;
+}
+
+:root:not(.dark)::view-transition-old(root) {
+  z-index: 999;
+}
+
+:root:not(.dark)::view-transition-new(root) {
+  z-index: 1;
+}
+
+/* 在主题切换期间优化动画性能 */
+.theme-transitioning * {
+  animation-play-state: paused !important;
+  transition: none !important;
 }

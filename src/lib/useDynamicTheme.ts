@@ -21,8 +21,8 @@ export function useDynamicTheme(avatarUrl: string) {
       const [primary, secondary = main] = [main, palette[1]];
       const style = document.documentElement.style;
 
-      console.log(primary);
-      console.log(secondary);
+      // console.log(primary);
+      // console.log(secondary);
 
       style.setProperty('--theme-primary', rgbToRgba(primary));
       style.setProperty('--theme-secondary', rgbToRgba(secondary));
