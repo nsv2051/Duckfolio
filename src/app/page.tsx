@@ -6,6 +6,9 @@ import { useState, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { ExternalLink, ChevronRight } from "lucide-react"
 
+
+export const runtime = "edge";
+
 export default function Home() {
   const config = getConfig()
   const [activeSection, setActiveSection] = useState("profile")
