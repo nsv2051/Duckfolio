@@ -26,4 +26,4 @@ RUN npm install -g serve
 EXPOSE 3000
 
 # 启动服务
-CMD ["serve", "-s", "build", "-l", "3000"]
+CMD ["pnpm", "start"]

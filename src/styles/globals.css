@@ -1,19 +1,8 @@
 @import 'tailwindcss';
-
+@import './theme.css';
 @import 'tw-animate-css';
 
-@custom-variant dark (.dark &);
-
-@import './theme.css';
-
-@layer base {
-  * {
-    @apply border-neutral-200 dark:border-neutral-800 outline-blue-500/50;
-  }
-  body {
-    @apply bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100;
-  }
-}
+@custom-variant dark (&:is(.dark *));
 
 @layer utilities {
   .animate-float {
@@ -46,28 +35,105 @@
       transform: translateY(0px);
     }
   }
+}
 
-  /* Gradient text utility */
-  .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500;
+@layer base {
+  * {
+    @apply border-neutral-200 dark:border-neutral-800 outline-blue-500/50;
   }
-
-  /* Glass effect utility */
-  .glass {
-    @apply backdrop-blur-md bg-white/70 dark:bg-black/70 border border-white/20 dark:border-white/10;
+  body {
+    @apply bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100;
   }
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-thumb {
-  @apply bg-blue-500/30 rounded-full hover:bg-blue-500/50 transition-colors;
-}
-
-/* Text selection */
+/* 文字选择 */
 ::selection {
-  @apply bg-blue-500/20 text-blue-500;
+  @apply bg-[var(--theme-primary)]/20 text-[var(--theme-primary)];
+}
+
+/* 用于主题切换 */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.4s;
+}
+
+::view-transition-old(root) {
+  animation: none;
+}
+
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+.dark::view-transition-old(root) {
+  z-index: 1;
+}
+
+.dark::view-transition-new(root) {
+  z-index: 999;
+}
+
+:root:not(.dark)::view-transition-old(root) {
+  z-index: 999;
+}
+
+:root:not(.dark)::view-transition-new(root) {
+  z-index: 1;
+}
+
+/* 在主题切换期间优化动画性能 */
+.theme-transitioning * {
+  animation-play-state: paused !important;
+  transition: none !important;
+}
+
+/* 自定义光标样式 */
+.custom-cursor,
+.custom-cursor * {
+  cursor: none !important;
+}
+
+.cursor-dot {
+  position: fixed;
+  z-index: 9999;
+  pointer-events: none;
+  width: 8px;
+  height: 8px;
+  background-color: var(--theme-primary);
+  border-radius: 50%;
+  will-change: transform;
+  filter: drop-shadow(0 0 4px var(--theme-primary, 0.5));
+}
+
+.cursor-ring {
+  position: fixed;
+  z-index: 9998;
+  pointer-events: none;
+  width: 32px;
+  height: 32px;
+  border: 1.5px solid var(--theme-primary);
+  border-radius: 50%;
+  will-change: transform;
+  transition: opacity 200ms ease;
+}
+
+.dark .cursor-dot {
+  background-color: var(--theme-secondary);
+}
+
+.dark .cursor-ring {
+  border-color: var(--theme-secondary);
+}
+
+/* 手机和平板设备不显示自定义光标 */
+@media (max-width: 768px) {
+  .cursor-dot,
+  .cursor-ring {
+    display: none;
+  }
+  .custom-cursor,
+  .custom-cursor * {
+    cursor: auto !important;
+  }
 }

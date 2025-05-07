@@ -97,7 +97,7 @@ export default function Home() {
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
               >
-                <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-[#ff7e5f] to-[#feb47b] opacity-80 dark:opacity-60 blur-md transform -rotate-6 scale-95" />
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-[var(--theme-primary)] to-[var(--theme-secondary)] opacity-80 dark:opacity-60 blur-md transform -rotate-6 scale-95" />
                 <div className="absolute inset-0 rounded-3xl overflow-hidden border-2 border-[#121212]/10 dark:border-white/10 bg-[#f8f8f8] dark:bg-[#1a1a1a]">
                   <Image
                     src={config.basic.avatar || ""}
@@ -122,7 +122,7 @@ export default function Home() {
                     {[..."Hello, ".split(''), ...(("I'm " + config.basic.name).split(''))].map((char, index) => (
                       <motion.span
                         key={`title-${index}`}
-                        className={`inline-block ${index >= 7 ? "text-[#ff7e5f] dark:text-[#feb47b]" : ""}`}
+                        className={`inline-block ${index >= 7 ? "text-[var(--theme-primary)] dark:text-[var(--theme-secondary)]" : ""}`}
                         animate={{
                           y: [0, -15, 0]
                         }}
@@ -153,7 +153,7 @@ export default function Home() {
                       href={link.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="relative inline-flex items-center justify-center p-2 rounded-full bg-[#f8f8f8]/50 dark:bg-[#1a1a1a]/50 text-[#121212]/70 dark:text-white/70 hover:text-[#ff7e5f] dark:hover:text-[#feb47b] transition-all duration-300 hover:scale-110 hover:shadow-md"
+                      className="relative inline-flex items-center justify-center p-2 rounded-full bg-[#f8f8f8]/50 dark:bg-[#1a1a1a]/50 text-[#121212]/70 dark:text-white/70 hover:text-[var(--theme-primary)] dark:hover:text-[var(--theme-secondary)] transition-all duration-300 hover:scale-110 hover:shadow-md"
                       aria-label={link.platform}
                       style={{
                         opacity: 0,
@@ -181,7 +181,7 @@ export default function Home() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, ease: "easeOut" }}
               >
-                <span className="bg-[#ff7e5f]/10 dark:bg-[#ff7e5f]/20 text-[#ff7e5f] dark:text-[#feb47b] p-3 rounded-xl mr-4 flex items-center justify-center">
+                <span className="bg-[var(--theme-primary)]/10 dark:bg-[var(--theme-primary)]/20 text-[var(--theme-primary)] dark:text-[var(--theme-secondary)] p-3 rounded-xl mr-4 flex items-center justify-center">
                   <ExternalLink size={24} />
                 </span>
                 我的链接
@@ -202,17 +202,17 @@ export default function Home() {
                     whileTap={{ scale: 0.98 }}
                   >
                     <div className="relative">
-                      <div className="absolute inset-0 bg-gradient-to-r from-[#ff7e5f]/20 to-[#feb47b]/20 dark:from-[#ff7e5f]/10 dark:to-[#feb47b]/10 rounded-2xl transform origin-left group-hover:scale-x-[1.02] transition-transform duration-300" />
-                      <div className="relative flex items-center justify-between bg-white dark:bg-[#1a1a1a] rounded-2xl border border-[#121212]/5 dark:border-white/5 p-4 sm:p-6 group-hover:border-[#ff7e5f]/30 dark:group-hover:border-[#feb47b]/30 transition-colors duration-300">
+                      <div className="absolute inset-0 bg-gradient-to-r from-[var(--theme-primary)]/20 to-[var(--theme-secondary)]/20 dark:from-[var(--theme-primary)]/10 dark:to-[var(--theme-secondary)]/10 rounded-2xl transform origin-left group-hover:scale-x-[1.02] transition-transform duration-300" />
+                      <div className="relative flex items-center justify-between bg-white dark:bg-[#1a1a1a] rounded-2xl border border-[#121212]/5 dark:border-white/5 p-4 sm:p-6 group-hover:border-[var(--theme-primary)]/30 dark:group-hover:border-[var(--theme-secondary)]/30 transition-colors duration-300">
                         <div className="flex-1">
-                          <h3 className="text-lg sm:text-xl font-medium text-[#121212] dark:text-white group-hover:text-[#ff7e5f] dark:group-hover:text-[#feb47b] transition-colors duration-300">
+                          <h3 className="text-lg sm:text-xl font-medium text-[#121212] dark:text-white group-hover:text-[var(--theme-primary)] dark:group-hover:text-[var(--theme-secondary)] transition-colors duration-300">
                             {link.title}
                           </h3>
                           {link.description && (
                             <p className="text-sm sm:text-base text-[#121212]/70 dark:text-white/70 mt-2">{link.description}</p>
                           )}
                         </div>
-                        <div className="text-[#121212]/40 dark:text-white/40 group-hover:text-[#ff7e5f] dark:group-hover:text-[#feb47b] transform group-hover:translate-x-1 transition-all duration-300">
+                        <div className="text-[#121212]/40 dark:text-white/40 group-hover:text-[var(--theme-primary)] dark:group-hover:text-[var(--theme-secondary)] transform group-hover:translate-x-1 transition-all duration-300">
                           <ChevronRight size={24} />
                         </div>
                       </div>
@@ -240,7 +240,7 @@ export default function Home() {
             href="https://github.com/Yorlg"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-[#ff7e5f] dark:hover:text-[#feb47b] transition-colors"
+            className="hover:text-[var(--theme-primary)]  dark:hover:text-[var(--theme-secondary)] transition-colors"
           >
             Yorlg
           </a>
@@ -249,7 +249,7 @@ export default function Home() {
             href="https://github.com/Yorlg/Duckfolio"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-[#ff7e5f] dark:hover:text-[#feb47b] transition-colors"
+            className="hover:text-[var(--theme-primary)]  dark:hover:text-[var(--theme-secondary)] transition-colors"
           >
             Duckfolio
           </a>

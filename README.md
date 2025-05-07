@@ -56,7 +56,10 @@ cd duckfolio
 # 安装依赖
 pnpm install
 
-# 启动开发服务器
+# 项目打包
+pnpm build
+
+# 启动服务器
 pnpm dev
 ```
 ### 2. 使用 Docker 部署
@@ -89,3 +92,5 @@ cd duckfolio
 docker build -t duckfolio .
 docker run -p 3000:3000 duckfolio
 ```
+
+项目的配置文件位于 `public/profile.json`，你可以在这里修改个人信息、社交链接等内容。
