@@ -85,7 +85,12 @@ services:
 ```bash
 docker-compose up -d
 ```
-自行构建 Docker 镜像
+
+### 3. 部署到 Cloudflare Pages
+
+要想部署到 Cloudflare Pages，请参阅该文档：[将 Duckfolio 部署到 Cloudflare Pages](docs/deploy-to-cloudflare-pages.md)
+
+### 4. 自行构建 Docker 镜像
 ```bash
 git clone https://github.com/Yorlg/Duckfolio.git
 cd duckfolio
