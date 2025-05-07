@@ -70,7 +70,7 @@ docker run -p 3000:3000 -v /root/duckfolio/profile.json:/app/public/profile.json
 ```
 访问 http://localhost:3000
 
-### 使用 Docker Compose 部署
+### 3. 使用 Docker Compose 部署
 ```bash
 services:
   duckfolio:
@@ -84,17 +84,24 @@ services:
 ```bash
 docker-compose up -d
 ```
-完整配置请参考：[docker-compose 的示例](https://github.com/Yorlg/Duckfolio/blob/main/docker-compose.yml)
 
-### 自行构建 Docker 镜像
+完整配置请参考：[docker-compose 的示例](docker-compose.yml)
+
+### 4. 部署到 Cloudflare Pages
+
+要想部署到 Cloudflare Pages，请参阅该文档：[将 Duckfolio 部署到 Cloudflare Pages](docs/deploy-to-cloudflare-pages.md)
+
+### 5. 自行构建 Docker 镜像
+
 ```bash
-git clone https://github.com/Yorlg/Duckfolio.git
+$ git clone https://github.com/Yorlg/Duckfolio.git
 cd duckfolio
 
 # 构建镜像
-docker build -t duckfolio .
+$ docker build -t duckfolio .
 
 # 启动容器
-docker run -p 3000:3000 duckfolio
+$ docker run -p 3000:3000 duckfolio
 ```
+
 项目的配置文件位于 `public/profile.json`，你可以在这里修改个人信息、社交链接等内容。
