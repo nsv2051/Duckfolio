@@ -66,12 +66,11 @@ pnpm dev
 
 ```bash
 docker pull yorlg/duckfolio:latest
-docker run -p 3000:3000 yorlg/duckfolio:latest
+docker run -p 3000:3000 -v /root/duckfolio/profile.json:/app/public/profile.json yorlg/duckfolio:latest
 ```
-访问 http://localhost:3000 查看网站
+访问 http://localhost:3000
 
-使用 Docker Compose 部署
-
+### 使用 Docker Compose 部署
 ```bash
 services:
   duckfolio:
@@ -81,16 +80,21 @@ services:
       - "3000:3000"
     restart: unless-stopped
 ```
-然后运行:
+启动服务:
 ```bash
 docker-compose up -d
 ```
-自行构建 Docker 镜像
+完整配置请参考：[docker-compose 的示例](https://github.com/Yorlg/Duckfolio/blob/main/docker-compose.yml)
+
+### 自行构建 Docker 镜像
 ```bash
 git clone https://github.com/Yorlg/Duckfolio.git
 cd duckfolio
+
+# 构建镜像
 docker build -t duckfolio .
+
+# 启动容器
 docker run -p 3000:3000 duckfolio
 ```
-
 项目的配置文件位于 `public/profile.json`，你可以在这里修改个人信息、社交链接等内容。
