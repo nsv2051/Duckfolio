@@ -8,8 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "pages:build": "npx @cloudflare/next-on-pages",
-    "preview": "npm run pages:build && npx wrangler pages dev",
-    "deploy": "npm run pages:build && npx wrangler pages deploy"
+    "preview": "pnpm run pages:build && pnpm dlx wrangler pages dev",
+    "deploy": "pnpm run pages:build && pnpm dlx wrangler pages deploy"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.7",
@@ -64,6 +64,12 @@
       "gauge": "*",
       "abab": "*",
       "glob": "*"
-    }
+    },
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp",
+      "unrs-resolver",
+      "workerd"
+    ]
   }
 }
