@@ -4,6 +4,6 @@ services:
     container_name: duckfolio
     restart: unless-stopped
     ports:
-      - 8080:8080
+      - 8080:3000
     volumes:
       - ./profile.json:/app/public/profile.json:ro
