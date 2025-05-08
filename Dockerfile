@@ -11,7 +11,7 @@ RUN pnpm install
 
 # 拷贝源码并构建
 COPY . .
-RUN pnpm build
+RUN pnpm build --verbose
 
 # --- 运行阶段 ---
 FROM node:22-alpine AS runner
@@ -19,7 +19,7 @@ FROM node:22-alpine AS runner
 WORKDIR /app
 
 # 设置生产环境变量
-ENV NODE_ENV production
+ENV NODE_ENV=production
 
 # 安装 pnpm
 RUN npm install -g pnpm

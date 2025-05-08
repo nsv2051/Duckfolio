@@ -20,9 +20,9 @@
 - 在 Fork 的仓库页面，点击绿色“Code”按钮，选择“Codespaces”选项。
 - 创建或打开一个 Codespace 环境。
 
-### 3. 更新 `platform-config` 文件
+### 3. 更新 `platform-config.json` 文件
 
-- 打开 `public/platform-config` 文件，根据自己的需要进行修改，修改完成后保存。
+- 打开 `public/platform-config.json` 文件，根据自己的需要进行修改，修改完成后保存。
 
 ### 3. 执行部署命令
 

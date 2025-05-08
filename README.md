@@ -66,7 +66,7 @@ pnpm dev
 
 ```bash
 docker pull yorlg/duckfolio:latest
-docker run -p 3000:3000 -v /root/duckfolio/platform-config:/app/public/platform-config yorlg/duckfolio:latest
+docker run -p 3000:3000 -v /root/duckfolio/platform-config.json:/app/public/platform-config.json yorlg/duckfolio:latest
 ```
 访问 http://localhost:3000
 
@@ -104,4 +104,4 @@ $ docker build -t duckfolio .
 $ docker run -p 3000:3000 duckfolio
 ```
 
-项目的配置文件位于 `public/platform-config`，你可以在这里修改个人信息、社交链接等内容。
+项目的配置文件位于 `public/platform-config.json`，你可以在这里修改个人信息、社交链接等内容。
