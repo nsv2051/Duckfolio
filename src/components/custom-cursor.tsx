@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, useRef } from "react"
+import { useEffect, useState, useRef, useCallback } from "react"
 import { motion, useMotionValue } from "framer-motion"
 
 export function CustomCursor() {
@@ -11,59 +11,62 @@ export function CustomCursor() {
     const [hidden, setHidden] = useState(true)
     const requestRef = useRef<number | null>(null)
     const previousTimeRef = useRef<number | null>(null)
+    const mousePositionRef = useRef({ x: 0, y: 0 })
+
+    const handleMouseEvent = useCallback((e: MouseEvent) => {
+        mousePositionRef.current = {
+            x: e.clientX,
+            y: e.clientY
+        }
+
+        if (e.type === 'mousedown') setClicked(true)
+        if (e.type === 'mouseup') setClicked(false)
+
+        const target = e.target as HTMLElement
+        if (e.type === 'mouseover') {
+            setLinkHovered(!!target.closest("a, button, [role=button], input, label, [data-hoverable]"))
+        }
+
+        if (e.type === 'mouseleave') setHidden(true)
+        if (e.type === 'mouseenter') setHidden(false)
+
+        if (!requestRef.current) {
+            requestRef.current = requestAnimationFrame(animateCursor)
+        }
+    }, [])
+
+    const animateCursor = useCallback((time: number) => {
+        if (previousTimeRef.current !== null) {
+            const currentX = cursorX.get()
+            const currentY = cursorY.get()
+            const speedFactor = 0.2
+
+            cursorX.set(currentX + (mousePositionRef.current.x - currentX) * speedFactor)
+            cursorY.set(currentY + (mousePositionRef.current.y - currentY) * speedFactor)
+        }
+
+        previousTimeRef.current = time
+        requestRef.current = requestAnimationFrame(animateCursor)
+    }, [cursorX, cursorY])
 
     useEffect(() => {
         const timeout = setTimeout(() => {
             setHidden(false)
         }, 1000)
 
-        let mouseX = 0
-        let mouseY = 0
-
-        const updatePosition = (e: MouseEvent) => {
-            mouseX = e.clientX
-            mouseY = e.clientY
-
-            if (!requestRef.current) {
-                requestRef.current = requestAnimationFrame(animateCursor)
-            }
+        cursorX.set(window.innerWidth / 2)
+        cursorY.set(window.innerHeight / 2)
+        mousePositionRef.current = {
+            x: window.innerWidth / 2,
+            y: window.innerHeight / 2
         }
 
-        const animateCursor = (time: number) => {
-            if (previousTimeRef.current !== null) {
-                const currentX = cursorX.get()
-                const currentY = cursorY.get()
-                const speedFactor = 0.2 // 调整此值可以控制跟随速度
-
-                cursorX.set(currentX + (mouseX - currentX) * speedFactor)
-                cursorY.set(currentY + (mouseY - currentY) * speedFactor)
-            }
-
-            previousTimeRef.current = time
-            requestRef.current = requestAnimationFrame(animateCursor)
-        }
-
-        const handleMouseDown = () => setClicked(true)
-        const handleMouseUp = () => setClicked(false)
-
-        const handleMouseOver = (e: MouseEvent) => {
-            const target = e.target as HTMLElement
-            if (target.closest("a, button, [role=button], input, label, [data-hoverable]")) {
-                setLinkHovered(true)
-            } else {
-                setLinkHovered(false)
-            }
-        }
-
-        const handleMouseLeave = () => setHidden(true)
-        const handleMouseEnter = () => setHidden(false)
-
-        window.addEventListener("mousemove", updatePosition, { passive: true })
-        window.addEventListener("mouseover", handleMouseOver, { passive: true })
-        window.addEventListener("mousedown", handleMouseDown, { passive: true })
-        window.addEventListener("mouseup", handleMouseUp, { passive: true })
-        window.addEventListener("mouseleave", handleMouseLeave)
-        window.addEventListener("mouseenter", handleMouseEnter)
+        window.addEventListener("mousemove", handleMouseEvent, { passive: true })
+        window.addEventListener("mouseover", handleMouseEvent, { passive: true })
+        window.addEventListener("mousedown", handleMouseEvent, { passive: true })
+        window.addEventListener("mouseup", handleMouseEvent, { passive: true })
+        window.addEventListener("mouseleave", handleMouseEvent)
+        window.addEventListener("mouseenter", handleMouseEvent)
 
         document.body.classList.add("custom-cursor")
 
@@ -72,15 +75,15 @@ export function CustomCursor() {
             if (requestRef.current) {
                 cancelAnimationFrame(requestRef.current)
             }
-            window.removeEventListener("mousemove", updatePosition)
-            window.removeEventListener("mouseover", handleMouseOver)
-            window.removeEventListener("mousedown", handleMouseDown)
-            window.removeEventListener("mouseup", handleMouseUp)
-            window.removeEventListener("mouseleave", handleMouseLeave)
-            window.removeEventListener("mouseenter", handleMouseEnter)
+            window.removeEventListener("mousemove", handleMouseEvent)
+            window.removeEventListener("mouseover", handleMouseEvent)
+            window.removeEventListener("mousedown", handleMouseEvent)
+            window.removeEventListener("mouseup", handleMouseEvent)
+            window.removeEventListener("mouseleave", handleMouseEvent)
+            window.removeEventListener("mouseenter", handleMouseEvent)
             document.body.classList.remove("custom-cursor")
         }
-    }, [cursorX, cursorY])
+    }, [handleMouseEvent])
 
     return (
         <>

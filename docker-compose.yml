@@ -6,4 +6,4 @@ services:
     ports:
       - 8080:3000
     volumes:
-      - ./profile.json:/app/public/profile.json:ro
+      - ./platform-config:/app/public/platform-config:ro

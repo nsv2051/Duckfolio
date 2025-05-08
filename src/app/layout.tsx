@@ -9,12 +9,12 @@ import { CustomCursor } from "@/components/custom-cursor"
 
 const inter = Inter({ subsets: ["latin"] })
 
-export function generateMetadata(): Metadata {
-  const config = getConfig()
+export async function generateMetadata(): Promise<Metadata> {
+  const config = await getConfig()
 
   return {
-    title: config.basic.name,
-    description: config.basic.bio,
+    title: config.profile.name,
+    description: config.profile.bio,
     icons: {
       icon: "/logo.png",
       shortcut: "/logo.png",

@@ -2,15 +2,15 @@
 
 import * as React from "react"
 import { ThemeProvider as NextThemesProvider } from "next-themes"
-import { getConfig } from "@/lib/config"
+import { useProfileStore } from "@/lib/store"
 import { useDynamicTheme } from '@/lib/useDynamicTheme';
 
 export function ThemeProvider({
     children,
     ...props
 }: React.ComponentProps<typeof NextThemesProvider>) {
-    const config = getConfig()
-    useDynamicTheme(config.basic.avatar)
+    const { avatar } = useProfileStore()
+    useDynamicTheme(avatar)
 
     return <NextThemesProvider
         attribute="class"

@@ -1,4 +1,4 @@
-import profileConfig from '../../public/profile.json';
+import profileConfig from '../../public/platform-config.json';
 
 export type SocialLink = {
   id: string;

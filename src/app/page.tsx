@@ -1,6 +1,6 @@
 "use client"
 
-import { getConfig } from "@/lib/config"
+import { useProfileStore } from "@/lib/store"
 import Image from "next/image"
 import { useState, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
@@ -10,7 +10,7 @@ import { ExternalLink, ChevronRight } from "lucide-react"
 export const runtime = "edge";
 
 export default function Home() {
-  const config = getConfig()
+  const { avatar, name, bio, socialLinks, websiteLinks } = useProfileStore()
   const [activeSection, setActiveSection] = useState("profile")
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -100,8 +100,8 @@ export default function Home() {
                 <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-[var(--theme-primary)] to-[var(--theme-secondary)] opacity-80 dark:opacity-60 blur-md transform -rotate-6 scale-95" />
                 <div className="absolute inset-0 rounded-3xl overflow-hidden border-2 border-[#121212]/10 dark:border-white/10 bg-[#f8f8f8] dark:bg-[#1a1a1a]">
                   <Image
-                    src={config.basic.avatar || ""}
-                    alt={config.basic.name}
+                    src={avatar}
+                    alt={name}
                     fill
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     className="object-cover"
@@ -119,7 +119,7 @@ export default function Home() {
                   transition={{ duration: 0.6, ease: "easeOut", delay: 0.3 }}
                 >
                   <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight flex flex-wrap items-center">
-                    {[..."Hello, ".split(''), ...(("I'm " + config.basic.name).split(''))].map((char, index) => (
+                    {[..."Hello, ".split(''), ...(("I'm " + name).split(''))].map((char, index) => (
                       <motion.span
                         key={`title-${index}`}
                         className={`inline-block ${index >= 7 ? "text-[var(--theme-primary)] dark:text-[var(--theme-secondary)]" : ""}`}
@@ -138,7 +138,7 @@ export default function Home() {
                       </motion.span>
                     ))}
                   </h1>
-                  <p className="text-base sm:text-lg text-[#121212]/80 dark:text-white/80 max-w-lg">{config.basic.bio}</p>
+                  <p className="text-base sm:text-lg text-[#121212]/80 dark:text-white/80 max-w-lg">{bio}</p>
                 </motion.div>
 
                 <motion.div
@@ -147,7 +147,7 @@ export default function Home() {
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.6, ease: "easeOut", delay: 0.5 }}
                 >
-                  {config.socialLinks.map((link, index) => (
+                  {socialLinks.map((link, index) => (
                     <a
                       key={link.id}
                       href={link.url}
@@ -188,7 +188,7 @@ export default function Home() {
               </motion.h2>
 
               <div className="space-y-6">
-                {config.websiteLinks.map((link, index) => (
+                {websiteLinks.map((link, index) => (
                   <motion.a
                     key={link.id}
                     href={link.url}
@@ -233,7 +233,7 @@ export default function Home() {
         className="relative z-10 py-6 mt-auto text-center text-[#121212]/60 dark:text-white/60 text-sm"
       >
         <p className="mb-2">
-          © {new Date().getFullYear()} {config.basic.name}. All rights reserved.
+          © {new Date().getFullYear()} {name}. All rights reserved.
         </p>
         <div className="flex justify-center space-x-4">
           <a

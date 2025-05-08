@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { getConfig } from '@/lib/config';
 
 export type SocialLink = {
   id: string;
@@ -21,41 +22,19 @@ interface ProfileState {
   bio: string;
   socialLinks: SocialLink[];
   websiteLinks: WebsiteLink[];
-  // 操作方法
-  setAvatar: (url: string) => void;
-  addSocialLink: (link: SocialLink) => void;
-  removeSocialLink: (id: string) => void;
-  addWebsiteLink: (link: WebsiteLink) => void;
-  removeWebsiteLink: (id: string) => void;
 }
+
+const config = await getConfig();
 
 export const useProfileStore = create<ProfileState>()(
   persist(
     (set) => ({
-      avatar: '/avatar.png',
-      name: '我的主页',
-      bio: '欢迎来到我的个人空间',
-      socialLinks: [],
-      websiteLinks: [],
-
-      setAvatar: (url) => set({ avatar: url }),
-      addSocialLink: (link) =>
-        set((state) => ({
-          socialLinks: [...state.socialLinks, link],
-        })),
-      removeSocialLink: (id) =>
-        set((state) => ({
-          socialLinks: state.socialLinks.filter((link) => link.id !== id),
-        })),
-      addWebsiteLink: (link) =>
-        set((state) => ({
-          websiteLinks: [...state.websiteLinks, link],
-        })),
-      removeWebsiteLink: (id) =>
-        set((state) => ({
-          websiteLinks: state.websiteLinks.filter((link) => link.id !== id),
-        })),
+      avatar: config.profile.avatar,
+      name: config.profile.name,
+      bio: config.profile.bio,
+      socialLinks: config.socialLinks,
+      websiteLinks: config.websiteLinks,
     }),
-    { name: 'profile-storage' }
+    { name: 'duckfolio-storage' }
   )
 );
