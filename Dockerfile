@@ -11,7 +11,7 @@ RUN pnpm install
 
 # 拷贝源码并构建
 COPY . .
-RUN pnpm build --verbose
+RUN pnpm build
 
 # --- 运行阶段 ---
 FROM node:22-alpine AS runner
