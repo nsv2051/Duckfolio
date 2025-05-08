@@ -13,6 +13,20 @@ export function CustomCursor() {
     const previousTimeRef = useRef<number | null>(null)
     const mousePositionRef = useRef({ x: 0, y: 0 })
 
+    const animateCursor = useCallback((time: number) => {
+        if (previousTimeRef.current !== null) {
+            const currentX = cursorX.get()
+            const currentY = cursorY.get()
+            const speedFactor = 0.2
+
+            cursorX.set(currentX + (mousePositionRef.current.x - currentX) * speedFactor)
+            cursorY.set(currentY + (mousePositionRef.current.y - currentY) * speedFactor)
+        }
+
+        previousTimeRef.current = time
+        requestRef.current = requestAnimationFrame(animateCursor)
+    }, [cursorX, cursorY])
+
     const handleMouseEvent = useCallback((e: MouseEvent) => {
         mousePositionRef.current = {
             x: e.clientX,
@@ -33,21 +47,7 @@ export function CustomCursor() {
         if (!requestRef.current) {
             requestRef.current = requestAnimationFrame(animateCursor)
         }
-    }, [])
-
-    const animateCursor = useCallback((time: number) => {
-        if (previousTimeRef.current !== null) {
-            const currentX = cursorX.get()
-            const currentY = cursorY.get()
-            const speedFactor = 0.2
-
-            cursorX.set(currentX + (mousePositionRef.current.x - currentX) * speedFactor)
-            cursorY.set(currentY + (mousePositionRef.current.y - currentY) * speedFactor)
-        }
-
-        previousTimeRef.current = time
-        requestRef.current = requestAnimationFrame(animateCursor)
-    }, [cursorX, cursorY])
+    }, [animateCursor])
 
     useEffect(() => {
         const timeout = setTimeout(() => {
@@ -83,7 +83,7 @@ export function CustomCursor() {
             window.removeEventListener("mouseenter", handleMouseEvent)
             document.body.classList.remove("custom-cursor")
         }
-    }, [handleMouseEvent])
+    }, [handleMouseEvent, cursorX, cursorY])
 
     return (
         <>

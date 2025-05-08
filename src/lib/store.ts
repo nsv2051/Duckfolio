@@ -24,11 +24,11 @@ interface ProfileState {
   websiteLinks: WebsiteLink[];
 }
 
-const config = await getConfig();
+const config = getConfig();
 
 export const useProfileStore = create<ProfileState>()(
-  persist(
-    (set) => ({
+  persist<ProfileState>(
+    () => ({
       avatar: config.profile.avatar,
       name: config.profile.name,
       bio: config.profile.bio,
