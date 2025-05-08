@@ -1,29 +1,36 @@
-# 构建并服务阶段 - 单阶段构建
-FROM node:22-alpine
+FROM node:22-alpine AS builder
 
-# 设置工作目录
 WORKDIR /app
 
 # 安装 pnpm
 RUN npm install -g pnpm
 
-# 复制 package.json 和 pnpm-lock.yaml (如果存在)
+# 拷贝依赖文件并安装依赖
 COPY package.json pnpm-lock.yaml* ./
-
-# 安装依赖
 RUN pnpm install
 
-# 复制源代码
+# 拷贝源码并构建
 COPY . .
-
-# 构建应用
 RUN pnpm build
 
-# 安装 serve 用于提供静态文件服务
-RUN npm install -g serve
+# --- 运行阶段 ---
+FROM node:22-alpine AS runner
 
-# 暴露端口
+WORKDIR /app
+
+# 设置生产环境变量
+ENV NODE_ENV production
+
+# 安装 pnpm
+RUN npm install -g pnpm
+
+# 复制构建产物和必要文件
+COPY --from=builder /app/.next .next
+COPY --from=builder /app/public public
+COPY --from=builder /app/package.json package.json
+COPY --from=builder /app/node_modules node_modules
+
 EXPOSE 3000
 
-# 启动服务
+# 启动生产服务器
 CMD ["pnpm", "start"]
