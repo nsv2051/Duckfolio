@@ -1,16 +1,25 @@
 import { ProfileConfig } from '@/types/platform-config';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { getConfig } from '@/lib/config';
+import { cachedConfig, initializeConfig } from '@/lib/config';
 
-const config = getConfig();
+export const useProfileStore = create<
+  ProfileConfig & { initialize: () => Promise<void> }
+>()(
+  persist(
+    (set) => ({
+      profile: cachedConfig.profile,
+      socialLinks: cachedConfig.socialLinks,
+      websiteLinks: cachedConfig.websiteLinks,
 
-export const useProfileStore = create<ProfileConfig>()(
-  persist<ProfileConfig>(
-    () => ({
-      profile: config.profile,
-      socialLinks: config.socialLinks,
-      websiteLinks: config.websiteLinks,
+      initialize: async () => {
+        const config = await initializeConfig();
+        set({
+          profile: config.profile,
+          socialLinks: config.socialLinks,
+          websiteLinks: config.websiteLinks,
+        });
+      },
     }),
     { name: 'duckfolio-storage' }
   )
