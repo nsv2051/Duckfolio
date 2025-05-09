@@ -19,8 +19,10 @@ export function useSwipeNavigation(initialSection = 'profile') {
     };
   }, []);
 
-  // 处理滑动事件
-  const handleDragEnd = (info: PanInfo) => {
+  const handleDragEnd = (
+    _event: MouseEvent | TouchEvent | PointerEvent,
+    info: PanInfo
+  ) => {
     if (!isMobile) return;
 
     const { offset, velocity } = info;
