@@ -1,20 +1,5 @@
-import profileConfig from '../../public/platform-config.json';
-
-export type SocialLink = {
-  id: string;
-  platform: string;
-  url: string;
-  icon: string;
-};
-
-export type WebsiteLink = {
-  id: string;
-  title: string;
-  url: string;
-  description?: string;
-};
-
-export type ProfileConfig = typeof profileConfig;
+import { ProfileConfig } from '@/types/platform-config';
+import profileConfig from '@/public/platform-config.json';
 
 export function getConfig(): ProfileConfig {
   return profileConfig;

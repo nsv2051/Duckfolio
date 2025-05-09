@@ -9,8 +9,8 @@ export function ThemeProvider({
     children,
     ...props
 }: React.ComponentProps<typeof NextThemesProvider>) {
-    const { avatar } = useProfileStore()
-    useDynamicTheme(avatar)
+    const { profile } = useProfileStore()
+    useDynamicTheme(profile.avatar)
 
     return <NextThemesProvider
         attribute="class"

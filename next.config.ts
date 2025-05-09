@@ -1,6 +1,9 @@
 import { setupDevPlatform } from '@cloudflare/next-on-pages/next-dev';
 import type { NextConfig } from 'next';
 
+/**
+ * @type {import('next').NextConfig}
+ */
 const nextConfig: NextConfig = {
   /* config options here */
   images: {

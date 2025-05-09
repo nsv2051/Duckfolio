@@ -1,37 +1,14 @@
+import { ProfileConfig } from '@/types/platform-config';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { getConfig } from '@/lib/config';
 
-export type SocialLink = {
-  id: string;
-  platform: string;
-  url: string;
-  icon: string;
-};
-
-export type WebsiteLink = {
-  id: string;
-  title: string;
-  url: string;
-  description?: string;
-};
-
-interface ProfileState {
-  avatar: string;
-  name: string;
-  bio: string;
-  socialLinks: SocialLink[];
-  websiteLinks: WebsiteLink[];
-}
-
 const config = getConfig();
 
-export const useProfileStore = create<ProfileState>()(
-  persist<ProfileState>(
+export const useProfileStore = create<ProfileConfig>()(
+  persist<ProfileConfig>(
     () => ({
-      avatar: config.profile.avatar,
-      name: config.profile.name,
-      bio: config.profile.bio,
+      profile: config.profile,
       socialLinks: config.socialLinks,
       websiteLinks: config.websiteLinks,
     }),
