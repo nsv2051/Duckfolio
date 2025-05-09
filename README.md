@@ -23,10 +23,10 @@
 ## 🖼️ 页面预览
 
 ### 首页 - Profile  
-![Preview](https://blog.yorlg.it/wp-content/uploads/2025/05/Duckfolio-Preview1.png)
+![Preview](https://blog.yorlg.it/wp-content/uploads/2025/05/Duckfolio-Profile.png)
 
 ### 链接页 - Links  
-![Preview](https://blog.yorlg.it/wp-content/uploads/2025/05/Duckfolio-Preview2.png)
+![Preview](https://blog.yorlg.it/wp-content/uploads/2025/05/Duckfolio-Links.png)
 
 ---
 
