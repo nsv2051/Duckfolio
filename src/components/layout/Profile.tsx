@@ -15,7 +15,7 @@ export function Profile({ profile, socialLinks }: ProfileProps) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            className="grid grid-cols-1 md:grid-cols-2 items-center h-full flex-1 my-auto pt-24 md:pt-16"
+            className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-center h-full flex-1 my-auto pt-24 md:pt-16"
         >
             {/* Profile image */}
             <motion.div
@@ -38,14 +38,14 @@ export function Profile({ profile, socialLinks }: ProfileProps) {
             </motion.div>
 
             {/* Profile info */}
-            <div className="space-y-12">
+            <div className="space-y-12 text-center md:text-left">
                 <motion.div
                     className="space-y-4 md:space-y-6"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, ease: "easeOut", delay: 0.3 }}
                 >
-                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight flex flex-wrap items-center">
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight flex flex-wrap items-center justify-center md:justify-start">
                         {[..."Hello, ".split(''), ...(("I'm " + profile.name).split(''))].map((char, index) => (
                             <motion.span
                                 key={`title-${index}`}
@@ -65,11 +65,12 @@ export function Profile({ profile, socialLinks }: ProfileProps) {
                             </motion.span>
                         ))}
                     </h1>
-                    <p className="text-base sm:text-lg text-[#121212]/80 dark:text-white/80 max-w-lg">{profile.bio}</p>
+                    <p className="text-base sm:text-lg text-[#121212]/80 dark:text-white/80 max-w-lg mx-auto md:mx-0">{profile.bio}</p>
                 </motion.div>
 
+                {/* Social links */}
                 <motion.div
-                    className="flex flex-wrap gap-6"
+                    className="flex flex-wrap gap-6 justify-center md:justify-start"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.6, ease: "easeOut", delay: 0.5 }}
