@@ -1,19 +1,21 @@
 "use client"
 
 import { useProfileStore } from "@/lib/store"
-import { useState, useRef } from "react"
-import { AnimatePresence } from "framer-motion"
+import { useRef } from "react"
+import { AnimatePresence, motion } from "framer-motion"
 import { Navigation } from "@/components/layout/Navigation"
 import { Profile } from "@/components/layout/Profile"
 import { Links } from "@/components/links/Links"
 import { Footer } from "@/components/layout/Footer"
+import { useSwipeNavigation } from "@/hooks/useSwipeNavigation"
 
 export const runtime = "edge"
 
 export default function Home() {
   const { profile, socialLinks, websiteLinks } = useProfileStore()
-  const [activeSection, setActiveSection] = useState("profile")
   const containerRef = useRef<HTMLDivElement>(null)
+
+  const { activeSection, setActiveSection, isMobile, dragProps } = useSwipeNavigation("profile")
 
   return (
     <div
@@ -22,16 +24,18 @@ export default function Home() {
     >
       <Navigation activeSection={activeSection} setActiveSection={setActiveSection} />
 
-      {/* Main content */}
-      <main className="relative z-10 flex-1 px-4 sm:px-6 md:px-8 w-full md:w-4/5 lg:w-3/4 xl:w-2/3 mx-auto flex flex-col">
+      <motion.main
+        className="relative z-10 flex-1 px-4 sm:px-6 md:px-8 w-full md:w-4/5 lg:w-3/4 xl:w-2/3 mx-auto flex flex-col"
+        {...dragProps}
+      >
         <AnimatePresence mode="wait">
           {activeSection === "profile" ? (
-            <Profile profile={profile} socialLinks={socialLinks} />
+            <Profile profile={profile} socialLinks={socialLinks} key="profile" />
           ) : (
-            <Links websiteLinks={websiteLinks} />
+            <Links websiteLinks={websiteLinks} key="links" />
           )}
         </AnimatePresence>
-      </main>
+      </motion.main>
 
       <Footer name={profile.name} />
     </div>
