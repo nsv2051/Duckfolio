@@ -15,7 +15,7 @@ export default function Home() {
   const { profile, socialLinks, websiteLinks } = useProfileStore()
   const containerRef = useRef<HTMLDivElement>(null)
 
-  const { activeSection, setActiveSection, isMobile, dragProps } = useSwipeNavigation("profile")
+  const { activeSection, setActiveSection, dragProps } = useSwipeNavigation("profile")
 
   return (
     <div
