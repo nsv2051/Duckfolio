@@ -9,8 +9,6 @@ import { Links } from '@/components/links/Links';
 import { Footer } from '@/components/layout/Footer';
 import { useSwipeNavigation } from '@/hooks/useSwipeNavigation';
 
-export const runtime = 'edge';
-
 export default function Home() {
   const { profile, socialLinks, websiteLinks } = useProfileStore();
   const containerRef = useRef<HTMLDivElement>(null);
