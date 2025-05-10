@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
+import { useRef } from 'react';
 import { useProfileStore } from '@/lib/store';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Navigation } from '@/components/layout/Navigation';
@@ -17,12 +17,6 @@ export default function Home() {
 
   const { activeSection, setActiveSection, dragProps } =
     useSwipeNavigation('profile');
-
-  const initialize = useProfileStore((state) => state.initialize);
-
-  useEffect(() => {
-    initialize();
-  }, [initialize]);
 
   return (
     <div

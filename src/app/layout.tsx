@@ -9,8 +9,8 @@ import { CustomCursor } from '@/components/interactive/custom-cursor';
 
 const inter = Inter({ subsets: ['latin'] });
 
-export async function generateMetadata(): Promise<Metadata> {
-  const config = await getConfig();
+export function generateMetadata(): Promise<Metadata> {
+  const config = getConfig();
 
   return Promise.resolve({
     title: config.profile.name,

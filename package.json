@@ -1,6 +1,6 @@
 {
   "name": "duck-folio",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
@@ -66,6 +66,7 @@
       "glob": "*"
     },
     "onlyBuiltDependencies": [
+      "@tailwindcss/oxide",
       "esbuild",
       "sharp",
       "unrs-resolver",
