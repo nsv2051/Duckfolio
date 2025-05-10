@@ -17,21 +17,24 @@
 
 ### 2. 在 Codespaces 中打开仓库
 
-- 在 Fork 的仓库页面，点击绿色“Code”按钮，选择“Codespaces”选项。
+- 在 Fork 的仓库页面，切换分支为 `cf-pages`。
+- 点击绿色“Code”按钮，选择“Codespaces”选项。
 - 创建或打开一个 Codespace 环境。
+- 如果已在 Codespaces 中打开仓库，请确保当前分支为 `cf-pages`。
+  终端中执行`git checkout cf-pages`，切换到 `cf-pages` 分支。
 
 ### 3. 更新 `platform-config.json` 文件
 
 - 打开 `public/platform-config.json` 文件，根据自己的需要进行修改，修改完成后保存。
 
-### 3. 执行部署命令
+### 4. 执行部署命令
 
 - 在 Codespaces 终端中运行：
   ```bash
   pnpm i && pnpm run deploy
   ```
 
-### 4. 登录 Cloudflare（首次部署）
+### 5. 登录 Cloudflare（首次部署）
 
 首次部署时，Wrangler 会提示登录 Cloudflare。
 
@@ -52,23 +55,23 @@
 
 **替代方法**：设置 `CLOUDFLARE_API_TOKEN` 环境变量以跳过交互式登录。参考 [Cloudflare Workers 文档](https://developers.cloudflare.com/workers/ci-cd/external-cicd/github-actions/)。
 
-### 5. 创建或选择项目
+### 6. 创建或选择项目
 
 - 首次部署时，Wrangler 提示“Create a new project”，确认即可。
-- 若提示选择分支，可直接选择 `main` 分支。
+- 若提示选择分支，可直接选择 `cf-pages` 分支。
 
-### 6. 配置自定义域名
+### 7. 配置自定义域名
 
 - 访问 [Cloudflare 仪表板](https://dash.cloudflare.com/)，找到“Workers & Pages”中的 Duckfolio 项目。
 - 进入“自定义域”，添加您的域名。
 - 若域名非 Cloudflare 托管，按照提示添加 DNS 记录。
 
-### 7. 验证部署
+### 8. 验证部署
 
 - 等待几分钟（通常 5-10 分钟）以确保 DNS 和 SSL 生效。
 - 使用自定义域名访问 Duckfolio，确认网站正常运行。
 
-### 8. 完成部署
+### 9. 完成部署
 
 - 若页面成功加载，部署完成。
 
