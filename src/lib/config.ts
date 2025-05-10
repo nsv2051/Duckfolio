@@ -1,7 +1,10 @@
 import { ProfileConfig } from '@/types/platform-config';
 
 export async function getConfig(): Promise<ProfileConfig> {
-  const baseUrl = 'http://localhost:3000';
+  const isServer = typeof window === 'undefined';
+  const baseUrl = isServer
+    ? process.env.DUCKFOLIO_API_URL || 'http://localhost:3000'
+    : '';
 
   const res = await fetch(`${baseUrl}/api/config`, {
     method: 'GET',
