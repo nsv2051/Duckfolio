@@ -7,5 +7,3 @@ services:
       - 8080:3000
     volumes:
       - ./platform-config.json:/app/public/platform-config.json:ro
-    environment:
-      - DUCKFOLIO_API_URL=http://duckfolio:8080

@@ -71,21 +71,13 @@ docker run -p 3000:3000 -v /root/duckfolio/platform-config.json:/app/public/plat
 访问 http://localhost:3000
 
 ### 3. 使用 Docker Compose 部署
-```bash
-services:
-  duckfolio:
-    image: yorlg/duckfolio:latest
-    container_name: duckfolio
-    ports:
-      - "3000:3000"
-    restart: unless-stopped
-```
-启动服务:
+- 创建 `platform-config.json` 文件，内容参考 [platform-config.json](public/platform-config.json)
+- 创建 `docker-compose.yml` 文件，配置请参考：[docker-compose 的示例](docker-compose.yml)
+- 在 `docker-compose.yml` 中，确保将 `platform-config.json` 挂载到容器的 `/app/public/platform-config.json` 路径
+  
 ```bash
 docker-compose up -d
 ```
-
-完整配置请参考：[docker-compose 的示例](docker-compose.yml)
 
 ### 4. 部署到 Cloudflare Pages
 
