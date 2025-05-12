@@ -83,7 +83,11 @@ docker-compose up -d
 
 要想部署到 Cloudflare Pages，请参阅该文档：[将 Duckfolio 部署到 Cloudflare Pages](https://github.com/Yorlg/Duckfolio/blob/cf-pages/docs/deploy-to-cloudflare-pages.md)
 
-### 5. 自行构建 Docker 镜像
+### 5. 部署到 Vercel
+
+要想部署到 Vercel，请参阅该文档：[将 Duckfolio 部署到 Vercel](https://github.com/Yorlg/Duckfolio/blob/cf-pages/docs/deploy-to-vercel.md)
+
+### 6. 自行构建 Docker 镜像
 
 ```bash
 $ git clone https://github.com/Yorlg/Duckfolio.git
