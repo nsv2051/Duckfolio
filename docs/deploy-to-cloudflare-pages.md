@@ -17,11 +17,11 @@
 
 ### 2. 在 Codespaces 中打开仓库
 
-- 在 Fork 的仓库页面，切换分支为 `cf-pages`。
+- 在 Fork 的仓库页面，切换分支为 `deploy`。
 - 点击绿色“Code”按钮，选择“Codespaces”选项。
 - 创建或打开一个 Codespace 环境。
-- 如果已在 Codespaces 中打开仓库，请确保当前分支为 `cf-pages`。
-  终端中执行`git checkout cf-pages`，切换到 `cf-pages` 分支。
+- 如果已在 Codespaces 中打开仓库，请确保当前分支为 `deploy`。
+  终端中执行`git checkout deploy`，切换到 `deploy` 分支。
 
 ### 3. 更新 `platform-config.json` 文件
 
@@ -58,7 +58,7 @@
 ### 6. 创建或选择项目
 
 - 首次部署时，Wrangler 提示“Create a new project”，确认即可。
-- 若提示选择分支，可直接选择 `cf-pages` 分支。
+- 若提示选择分支，可直接选择 `deploy` 分支。
 
 ### 7. 配置自定义域名
 

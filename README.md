@@ -50,3 +50,7 @@
 ### 部署到 Cloudflare Pages
 
 要想部署到 Cloudflare Pages，请参阅该文档：[将 Duckfolio 部署到 Cloudflare Pages](docs/deploy-to-cloudflare-pages.md)
+
+### 部署到 Vercel
+
+要想部署到 Vercel，请参阅该文档：[将 Duckfolio 部署到 Vercel](docs/deploy-to-vercel.md)
