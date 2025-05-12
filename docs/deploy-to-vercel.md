@@ -1,8 +1,5 @@
 # 将 Duckfolio 部署到 Vercel
 
-
-将 Duckfolio 部署到 Vercel（切换至 `deploy` 分支）
-
 本文档将指导您将 Next.js 项目 [Duckfolio](https://github.com/Yorlg/Duckfolio) 部署到 Vercel，并确保切换至正确的 `deploy` 分支。
 
 > ⚠️ **注意**：请确保您已拥有 GitHub 和 Vercel 账户。
