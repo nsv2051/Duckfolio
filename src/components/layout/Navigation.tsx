@@ -25,7 +25,7 @@ export function Navigation() {
   const activeSection = getActiveSection();
 
   return (
-    <nav className="fixed top-0 left-0 w-full z-40 px-4 sm:px-8 py-4 sm:py-6 flex justify-between items-center">
+    <nav className="fixed top-0 left-0 w-full z-40 p-4 sm:px-8  sm:py-6 flex justify-between items-center">
       <motion.div
         initial={{ opacity: 0, x: -20 }}
         animate={{

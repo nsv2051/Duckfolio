@@ -1,28 +1,28 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
-import { remark } from 'remark';
-import remarkGfm from 'remark-gfm';
-import remarkHtml from 'remark-html';
 import Link from 'next/link';
+import { renderMarkdownToHtml } from '@/lib/markdown';
 
 async function get404Content() {
   try {
     const filePath = path.join(process.cwd(), 'posts', '404.md');
+
+    if (!fs.existsSync(filePath)) {
+      return {
+        title: '404 - 页面未找到',
+        htmlContent: '<h1>404</h1><p>页面未找到</p>',
+      };
+    }
+
     const fileContents = fs.readFileSync(filePath, 'utf8');
     const { data, content } = matter(fileContents);
 
-    const processedContent = await remark()
-      .use(remarkGfm)
-      .use(remarkHtml, { sanitize: false })
-      .process(content);
-
     return {
       title: data.title || '404 - 页面未找到',
-      htmlContent: processedContent.toString(),
+      htmlContent: await renderMarkdownToHtml(content),
     };
-  } catch (error) {
-    console.error('Error reading 404.md:', error);
+  } catch {
     return {
       title: '404 - 页面未找到',
       htmlContent: '<h1>404</h1><p>页面未找到</p>',

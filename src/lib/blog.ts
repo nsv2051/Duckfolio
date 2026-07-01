@@ -19,6 +19,7 @@ export interface BlogPost {
   description?: string;
   tags?: string[];
   content: string;
+  draft?: boolean;
   readingTime?: string;
 }
 
@@ -42,11 +43,13 @@ export function getAllPosts(): BlogPost[] {
         title: data.title || slug,
         date: data.date || '',
         description: data.description || '',
+        draft: Boolean(data.draft),
         tags: data.tags || [],
         content,
         readingTime: calculateReadingTime(content),
       };
-    });
+    })
+    .filter((post) => !post.draft);
 
   // 按日期排序（最新的在前）
   return allPostsData.sort((a, b) => {
@@ -67,11 +70,16 @@ export function getPostBySlug(slug: string): BlogPost | null {
     const fileContents = fs.readFileSync(fullPath, 'utf8');
     const { data, content } = matter(fileContents);
 
+    if (data.draft) {
+      return null;
+    }
+
     return {
       slug,
       title: data.title || slug,
       date: data.date || '',
       description: data.description || '',
+      draft: Boolean(data.draft),
       tags: data.tags || [],
       content,
       readingTime: calculateReadingTime(content),

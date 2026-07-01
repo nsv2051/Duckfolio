@@ -1,14 +1,18 @@
 'use client';
 
 import { Moon, Sun } from 'lucide-react';
+// import { usePathname } from 'next/navigation';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/packages/ui/button';
+// import { cn } from '@/lib/utils';
 
 export function ModeToggle() {
   const { setTheme, resolvedTheme } = useTheme();
+  // const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
+  // const isAdmin = pathname.startsWith('/admin');
 
   useEffect(() => {
     setMounted(true);
@@ -31,7 +35,7 @@ export function ModeToggle() {
     const y = event.clientY;
     const endRadius = Math.hypot(
       Math.max(x, window.innerWidth - x),
-      Math.max(y, window.innerHeight - y)
+      Math.max(y, window.innerHeight - y),
     );
 
     try {
@@ -58,7 +62,7 @@ export function ModeToggle() {
               pseudoElement: isDark
                 ? '::view-transition-old(root)'
                 : '::view-transition-new(root)',
-            }
+            },
           );
         })
         .catch((err) => {
@@ -97,7 +101,7 @@ export function ModeToggle() {
               transition={{ duration: 0.3, ease: 'easeInOut' }}
               className="absolute inset-0 flex items-center justify-center"
             >
-              <Sun className="h-[1.2rem] w-[1.2rem] text-primary" />
+              <Sun className="size-[1.2rem]  text-primary" />
             </motion.div>
           ) : (
             <motion.div
@@ -108,7 +112,7 @@ export function ModeToggle() {
               transition={{ duration: 0.3, ease: 'easeInOut' }}
               className="absolute inset-0 flex items-center justify-center"
             >
-              <Moon className="h-[1.2rem] w-[1.2rem] text-primary" />
+              <Moon className="size-[1.2rem]  text-primary" />
             </motion.div>
           )}
         </AnimatePresence>

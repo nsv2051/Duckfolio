@@ -20,7 +20,7 @@ export function Footer({ name }: FooterProps) {
           href="https://github.com/Yorlg"
           target="_blank"
           rel="noopener noreferrer"
-          className="hover:text-[var(--theme-primary)]  dark:hover:text-[var(--theme-secondary)] transition-colors"
+          className="hover:text-(--theme-primary)  dark:hover:text-(--theme-secondary) transition-colors"
         >
           Yorlg
         </a>
@@ -29,7 +29,7 @@ export function Footer({ name }: FooterProps) {
           href="https://github.com/Yorlg/Duckfolio"
           target="_blank"
           rel="noopener noreferrer"
-          className="hover:text-[var(--theme-primary)]  dark:hover:text-[var(--theme-secondary)] transition-colors"
+          className="hover:text-(--theme-primary)  dark:hover:text-(--theme-secondary) transition-colors"
         >
           Duckfolio
         </a>

@@ -22,7 +22,7 @@ export function SocialLinks() {
           >
             <span className="sr-only">{link.platform}</span>
             <span
-              className="h-4 w-4"
+              className="size-4 "
               dangerouslySetInnerHTML={{ __html: link.icon }}
             />
           </a>

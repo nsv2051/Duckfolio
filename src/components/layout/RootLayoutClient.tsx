@@ -1,12 +1,13 @@
 'use client';
 
-import { ReactNode, useEffect } from 'react';
+import type { ReactNode } from 'react';
 import { motion } from 'framer-motion';
 import { usePathname } from 'next/navigation';
 import { Navigation } from '@/components/layout/Navigation';
 import { Footer } from '@/components/layout/Footer';
 import { useSwipeNavigation } from '@/lib/useSwipeNavigation';
 import { useProfileStore } from '@/lib/store';
+import { cn } from '@/lib/utils';
 
 interface RootLayoutClientProps {
   children: ReactNode;
@@ -16,14 +17,20 @@ export function RootLayoutClient({ children }: RootLayoutClientProps) {
   const { dragProps } = useSwipeNavigation();
   const pathname = usePathname();
   const { profile } = useProfileStore();
+  const isAdmin = pathname.startsWith('/admin');
 
   return (
     <div className="relative min-h-screen w-full text-[#121212] dark:text-[#f0f0f0] overflow-hidden flex flex-col">
-      <Navigation />
+      {!isAdmin && <Navigation />}
 
       <motion.main
-        className="relative z-10 flex-1 px-4 sm:px-6 md:px-8 w-full md:w-4/5 lg:w-3/4 xl:w-2/3 mx-auto flex flex-col"
-        {...dragProps}
+        className={cn(
+          'relative z-10 flex-1 w-full flex flex-col',
+          isAdmin
+            ? 'mx-0 px-0'
+            : 'mx-auto px-4 sm:px-6 md:w-4/5 md:px-8 lg:w-3/4 xl:w-2/3'
+        )}
+        {...(isAdmin ? {} : dragProps)}
       >
         <motion.div
           key={pathname}
@@ -40,7 +47,7 @@ export function RootLayoutClient({ children }: RootLayoutClientProps) {
         </motion.div>
       </motion.main>
 
-      <Footer name={profile?.name || 'Duck'} />
+      {!isAdmin && <Footer name={profile?.name || 'Duck'} />}
     </div>
   );
 }

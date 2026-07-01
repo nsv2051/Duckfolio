@@ -1,13 +1,4 @@
-# 更新日志
-
-本项目所有重要变更均会记录在此文件中。
-
-格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，
-版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
-
-## [未发布]
-
-## [0.4.0] - 2026-07-01
+# 2.3.0 (2026-7-1)
 
 ### 新增
 
@@ -49,7 +40,7 @@
 - `dropdown-menu.tsx` 将 `data-[disabled]` 简化为 `data-disabled`，`min-w-[8rem]` 改为 `min-w-32`
 - 新增 `eslint-plugin-better-tailwindcss` 规范 Tailwind 类名写法
 
-## [0.3.0] - 2025-05-10
+# 2.2.0 (2025-5-10)
 
 ### 新增
 
@@ -82,7 +73,7 @@
 - 升级 `wrangler` 从 4.51.0 → 4.59.1
 - 升级 `postcss` 从 8.5.6 → 8.5.10
 
-## [0.2.0] - 2025-05-06
+# 2.1.0 (2025-5-06)
 
 ### 新增
 
@@ -111,7 +102,7 @@
 - 修复部署 Cloudflare Pages 失败的问题
 - 修复若干 Bug
 
-## [0.1.0] - 2025-05-05
+# 2.0.0 (2025-5-05)
 
 ### 新增
 
@@ -123,9 +114,3 @@
 - 将配置文件提取到 `public` 目录下方便更改
 - 合并 GitHub Action Workflow 以节省构建时间
 - 构建用 Workflow 支持手动触发执行
-
-[未发布]: https://github.com/Yorlg/Duckfolio/compare/v0.4.0...HEAD
-[0.4.0]: https://github.com/Yorlg/Duckfolio/compare/v0.3.0...v0.4.0
-[0.3.0]: https://github.com/Yorlg/Duckfolio/compare/v0.2.0...v0.3.0
-[0.2.0]: https://github.com/Yorlg/Duckfolio/compare/v0.1.0...v0.2.0
-[0.1.0]: https://github.com/Yorlg/Duckfolio/releases/tag/v0.1.0

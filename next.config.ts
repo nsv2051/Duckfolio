@@ -1,19 +1,17 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  /* config options here */
   images: { unoptimized: true },
   async rewrites() {
     return [
       {
-        source: '/admin',
-        destination: '/admin/index.html',
-      },
-      {
-        source: '/config.yml',
-        destination: '/admin/config.yml',
+        destination: '/api/media/:path*',
+        source: '/media/:path*',
       },
     ];
+  },
+  turbopack: {
+    root: process.cwd(),
   },
 };
 
