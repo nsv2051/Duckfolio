@@ -1,3 +1,9 @@
+# 2.4.1 (2026-07-01)
+
+### 修复
+
+- 修复 `.gitignore` 中 `posts/` 规则误伤 `src/app/api/admin/posts/route.ts`，导致 Vercel 部署后 `/api/admin/posts` 直接命中 404 的问题。
+
 # 2.4.0 (2026-07-01)
 
 ### 新增
