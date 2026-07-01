@@ -106,16 +106,16 @@ posts/{slug}.md
 
 ## 部署
 
-当前支持 Vercel 和 Cloudflare Workers。详细说明见：
+当前支持 Vercel 和 ~~Cloudflare Workers~~。详细说明见：
 
 - [docs/deploy-to-Vercel.md](docs/deploy-to-Vercel.md)
-- [docs/deploy-to-Cloudflare.md](docs/deploy-to-Cloudflare.md)
+- ~~[docs/deploy-to-Cloudflare.md](docs/deploy-to-Cloudflare.md)~~
 
 关键要求：
 
 - 部署平台必须支持 Next.js 服务端 API。
 - 生产分支应与 `GITHUB_BRANCH` 保持一致，例如都使用 `deploy`。
-- Cloudflare 不能使用纯静态导出，需要使用 Workers / OpenNext 方式部署。
+- ~~Cloudflare 不能使用纯静态导出，需要使用 Workers / OpenNext 方式部署。~~
 
 ## 常用命令
 
