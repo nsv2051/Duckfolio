@@ -1,7 +1,20 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
-import { BarChart3, Check, EyeOff, Globe2, List, Settings2 } from 'lucide-react';
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from 'react';
+import {
+  BarChart3,
+  Check,
+  EyeOff,
+  Globe2,
+  List,
+  Settings2,
+} from 'lucide-react';
 import type { ProfileConfig } from '@/types/platform-config';
 import { AdminNoticeStack } from './AdminNoticeStack';
 import { NavButton } from './AdminShared';
@@ -19,7 +32,12 @@ import type {
   PostFormState,
   Tab,
 } from './types';
-import { createEmptyPostForm, emptyConfig, parseDateTime, toDatetimeLocal } from './utils';
+import {
+  createEmptyPostForm,
+  emptyConfig,
+  parseDateTime,
+  toDatetimeLocal,
+} from './utils';
 
 export function AdminPanel() {
   const [tab, setTab] = useState<Tab>('home');
@@ -52,7 +70,9 @@ export function AdminPanel() {
         setConfig(data.config);
       })
       .catch((error) => {
-        setMessage(error instanceof Error ? error.message : '后台状态读取失败。');
+        setMessage(
+          error instanceof Error ? error.message : '后台状态读取失败。',
+        );
       });
   }, []);
 
@@ -111,33 +131,40 @@ export function AdminPanel() {
     setTab('posts');
   }, []);
 
-  const loadPosts = useCallback(async () => {
-    if (!adminToken) {
-      setPosts([]);
-      return;
-    }
+  const loadPosts = useCallback(
+    async (options?: { keepMessage?: boolean }) => {
+      if (!adminToken) {
+        setPosts([]);
+        return;
+      }
 
-    setIsLoadingPosts(true);
-    setMessage('');
+      setIsLoadingPosts(true);
+      if (!options?.keepMessage) {
+        setMessage('');
+      }
 
-    try {
-      const response = await fetch('/api/admin/posts', {
-        headers: {
-          'x-admin-token': adminToken,
-        },
-      });
-      const data = await readAdminResponse<ApiPostsResponse>(
-        response,
-        '文章列表读取失败。',
-      );
+      try {
+        const response = await fetch('/api/admin/posts', {
+          headers: {
+            'x-admin-token': adminToken,
+          },
+        });
+        const data = await readAdminResponse<ApiPostsResponse>(
+          response,
+          '文章列表读取失败。',
+        );
 
-      setPosts(data.posts || []);
-    } catch (error) {
-      setMessage(error instanceof Error ? error.message : '文章列表读取失败。');
-    } finally {
-      setIsLoadingPosts(false);
-    }
-  }, [adminToken]);
+        setPosts(data.posts || []);
+      } catch (error) {
+        setMessage(
+          error instanceof Error ? error.message : '文章列表读取失败。',
+        );
+      } finally {
+        setIsLoadingPosts(false);
+      }
+    },
+    [adminToken],
+  );
 
   const editPost = async (slug: string) => {
     if (!adminToken) {
@@ -321,12 +348,15 @@ export function AdminPanel() {
           : `已写入 ${data.result.path}`
         : '文章已保存。';
 
-      setMessage(
-        data.message ? `${data.message} ${targetMessage}` : targetMessage,
-      );
+      const successMessage = data.message
+        ? `${data.message} ${targetMessage}`
+        : targetMessage;
+
       setEditingSlug(data.slug || post.slug);
       updatePost({ slug: data.slug || post.slug });
-      void loadPosts();
+      setTab('posts');
+      setMessage(successMessage);
+      await loadPosts({ keepMessage: true });
     } catch (error) {
       setMessage(error instanceof Error ? error.message : '文章发布失败。');
     } finally {
