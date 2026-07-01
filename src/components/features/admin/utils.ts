@@ -52,7 +52,7 @@ export function formatDateTimeLabel(value: string) {
   const date = parseDateTime(value);
 
   if (!date) {
-    return '??????';
+    return '日期无效';
   }
 
   return date.toLocaleDateString('zh-CN', {
@@ -66,7 +66,7 @@ export function formatPostDate(value: string) {
   const date = parseDateTime(value);
 
   if (!date) {
-    return '?????';
+    return '未知日期';
   }
 
   return date.toLocaleDateString('zh-CN', {
@@ -95,7 +95,7 @@ export function getMonthlyPostCounts(posts: AdminPostSummary[]) {
 
     return {
       count,
-      label: String(month + 1) + '?',
+      label: String(month + 1) + '月',
     };
   });
 }

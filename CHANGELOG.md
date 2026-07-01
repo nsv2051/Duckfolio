@@ -1,3 +1,32 @@
+# 2.4.0 (2026-07-01)
+
+### 新增
+
+- `/admin` 文章列表支持编辑、删除、公开/草稿切换和文章查看。
+- 新增 `/api/admin/posts` 的完整 CRUD 能力：列表、单篇读取、发布/更新、状态切换、删除。
+- 新增 Vercel 部署文档 `docs/deploy-to-Vercel.md`。
+- ~~新增 Cloudflare Workers 部署文档 `docs/deploy-to-Cloudflare.md`~~。
+- 新增后台接口响应安全解析，避免 Vercel 返回 HTML 时前端显示 JSON 解析异常。
+
+### 变更
+
+- 将 `AdminPanel.tsx` 拆分为文章编辑、文章列表、站点配置、首页概览、通知栈和公共控件等模块。
+- 所有 `/api/admin/*` 路由强制动态执行并禁用缓存，降低 Vercel 部署环境下接口被静态化或缓存误判的风险。
+- README 部署说明改为 Vercel / ~~Cloudflare Workers~~，并移除旧 Netlify 说明。
+- 管理后台菜单按钮样式改为明确的 active / inactive 状态。
+- 首页概览移除“浏览数据”和“访问数据”占位模块。
+
+### 修复
+
+- 修复错误管理员口令或部署返回 HTML 时显示 `Unexpected token '<'` 的问题。
+- 修复文章保存成功但响应结果为空时的前端类型问题。
+- 修复 Turbopack 构建时本地路径追踪范围过大的警告。
+
+### 移除
+
+- 移除旧 Netlify 部署文档 `docs/deploy-to-netlify.md`。
+- 移除 `.gitignore` 中的 Netlify 目录忽略项。
+
 # 2.3.0 (2026-7-1)
 
 ### 新增

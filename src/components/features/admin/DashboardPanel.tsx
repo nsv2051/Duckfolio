@@ -26,7 +26,7 @@ export function DashboardPanel({
       <div className="flex flex-col gap-1 border-b border-[#121212]/10 pb-4 dark:border-white/10">
         <h2 className="text-xl font-medium">首页</h2>
         <p className="text-sm text-[#121212]/50 dark:text-white/50">
-          内容概览、浏览数据和访问数据。
+          内容概览和发布状态。
         </p>
       </div>
 
@@ -75,17 +75,6 @@ export function DashboardPanel({
               </div>
             </div>
           </div>
-
-          <div className="grid gap-4 md:grid-cols-2">
-            <AnalyticsPlaceholder
-              title="浏览数据"
-              description="当前项目还没有文章浏览量采集接口。接入统计后这里会显示浏览趋势和热门文章。"
-            />
-            <AnalyticsPlaceholder
-              title="访问数据"
-              description="当前项目还没有站点访问统计数据源。可以后续接入 Vercel Analytics、Cloudflare Web Analytics 或自建统计接口。"
-            />
-          </div>
         </>
       )}
     </section>
@@ -97,32 +86,6 @@ function DashboardMetricCard({ label, value }: { label: string; value: number })
     <div className="rounded-lg border border-[#121212]/10 p-5 dark:border-white/10">
       <p className="text-sm text-[#121212]/50 dark:text-white/50">{label}</p>
       <p className="mt-3 text-3xl font-semibold">{value}</p>
-    </div>
-  );
-}
-
-function AnalyticsPlaceholder({
-  description,
-  title,
-}: {
-  description: string;
-  title: string;
-}) {
-  return (
-    <div className="rounded-lg border border-dashed border-[#121212]/15 p-5 dark:border-white/15">
-      <h3 className="font-medium">{title}</h3>
-      <div className="mt-5 grid h-32 grid-cols-7 items-end gap-2">
-        {[42, 58, 34, 72, 50, 86, 64].map((height, index) => (
-          <div
-            className="rounded bg-[#121212]/10 dark:bg-white/10"
-            key={`${title}-${index}`}
-            style={{ height: `${height}%` }}
-          />
-        ))}
-      </div>
-      <p className="mt-4 text-sm text-[#121212]/50 dark:text-white/50">
-        {description}
-      </p>
     </div>
   );
 }

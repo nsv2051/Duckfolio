@@ -5,6 +5,9 @@ import {
 } from '@/lib/admin/content';
 
 export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+export const fetchCache = 'force-no-store';
 
 const MAX_MEDIA_SIZE = 50 * 1024 * 1024;
 const allowedExtensions = new Set([
