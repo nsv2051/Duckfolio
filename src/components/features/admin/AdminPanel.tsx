@@ -4,6 +4,7 @@ import {
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from 'react';
@@ -53,6 +54,7 @@ export function AdminPanel() {
   const [editingSlug, setEditingSlug] = useState<string | null>(null);
   const [editorKey, setEditorKey] = useState(0);
   const [mutatingPostSlug, setMutatingPostSlug] = useState<string | null>(null);
+  const skipNextPostsAutoLoadRef = useRef(false);
 
   useEffect(() => {
     const storedToken = window.localStorage.getItem('duckfolio-admin-token');
@@ -124,12 +126,16 @@ export function AdminPanel() {
     setTab('post');
   }, []);
 
-  const cancelPostEditing = useCallback(() => {
+  const clearPostForm = useCallback(() => {
     setPost(createEmptyPostForm());
     setEditingSlug(null);
     setEditorKey((current) => current + 1);
-    setTab('posts');
   }, []);
+
+  const cancelPostEditing = useCallback(() => {
+    clearPostForm();
+    setTab('posts');
+  }, [clearPostForm]);
 
   const loadPosts = useCallback(
     async (options?: { keepMessage?: boolean }) => {
@@ -290,7 +296,7 @@ export function AdminPanel() {
       setPosts((current) => current.filter((item) => item.slug !== slug));
 
       if (editingSlug === slug) {
-        resetPostForm();
+        clearPostForm();
       }
 
       setMessage(data.message || '文章已删除。');
@@ -303,6 +309,11 @@ export function AdminPanel() {
 
   useEffect(() => {
     if (tab === 'home' || tab === 'posts') {
+      if (skipNextPostsAutoLoadRef.current) {
+        skipNextPostsAutoLoadRef.current = false;
+        return;
+      }
+
       void loadPosts();
     }
   }, [loadPosts, tab]);
@@ -352,11 +363,12 @@ export function AdminPanel() {
         ? `${data.message} ${targetMessage}`
         : targetMessage;
 
-      setEditingSlug(data.slug || post.slug);
-      updatePost({ slug: data.slug || post.slug });
+      clearPostForm();
+      skipNextPostsAutoLoadRef.current = true;
       setTab('posts');
       setMessage(successMessage);
       await loadPosts({ keepMessage: true });
+      setMessage(successMessage);
     } catch (error) {
       setMessage(error instanceof Error ? error.message : '文章发布失败。');
     } finally {
