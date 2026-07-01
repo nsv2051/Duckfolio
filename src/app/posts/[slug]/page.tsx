@@ -57,7 +57,7 @@ export default async function PostPage({ params }: PostPageProps) {
         className="mb-10 inline-flex items-center gap-2 text-sm text-[#121212]/50 transition-colors hover:text-[#121212] dark:text-white/50 dark:hover:text-white"
       >
         <ArrowLeft size={16} />
-        posts
+        返回
       </Link>
 
       <header className="mb-10">
