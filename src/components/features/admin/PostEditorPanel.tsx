@@ -93,9 +93,7 @@ export function PostEditorPanel({
         <textarea
           className="admin-input min-h-24 resize-y"
           value={post.description}
-          onChange={(event) =>
-            onPostChange({ description: event.target.value })
-          }
+          onChange={(event) => onPostChange({ description: event.target.value })}
         />
       </Field>
 
@@ -112,9 +110,7 @@ export function PostEditorPanel({
               checked={post.draft}
               className="size-4 accent-[#121212] dark:accent-white"
               type="checkbox"
-              onChange={(event) =>
-                onPostChange({ draft: event.target.checked })
-              }
+              onChange={(event) => onPostChange({ draft: event.target.checked })}
             />
             保存为草稿
           </label>
