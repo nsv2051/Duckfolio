@@ -21,9 +21,11 @@ overrides:
   postcss@<8.5.10: 8.5.10
 
 allowBuilds:
+  esbuild: set this to true or false
   msgpackr-extract: true
   sharp: true
   unrs-resolver: true
+  workerd: set this to true or false
 
 allowedDeprecatedVersions:
   abab: '*'

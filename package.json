@@ -2,6 +2,7 @@
   "name": "duck-folio",
   "version": "2.3.0",
   "private": true,
+  "packageManager": "pnpm@11.2.2",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
