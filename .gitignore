@@ -2,6 +2,7 @@
 
 # 依赖
 /node_modules
+/.pnpm-store/
 /.pnp
 .pnp.js
 /.yarn
@@ -16,9 +17,6 @@
 # 生产环境
 /build
 
-# Netlify
-/.netlify/
-
 # 其他
 .DS_Store
 *.pem
@@ -29,6 +27,9 @@ yarn-debug.log*
 yarn-error.log*
 
 # 本地环境变量
+.env
+.env.*
+!.env.example
 .env*.local
 
 # VS Code

@@ -64,7 +64,7 @@ export function Blog({ posts }: BlogProps) {
             <div className="space-y-20 md:space-y-32">
               {years.map((year, yearIndex) => (
                 <div key={year} className="relative">
-                  <div className="absolute -left-7 md:-left-20 -top-4 md:-top-16 text-[5rem] md:text-[10rem] font-light text-[#121212]/[0.05] md:text-[#121212]/[0.035] dark:text-white/[0.05] md:dark:text-white/[0.035] leading-none select-none pointer-events-none -z-10">
+                  <div className="absolute -left-7 md:-left-20 -top-4 md:-top-16 text-[5rem] md:text-[10rem] font-light text-[#121212]/5 md:text-[#121212]/[0.035] dark:text-white/5 md:dark:text-white/[0.035] leading-none select-none pointer-events-none -z-10">
                     {year}
                   </div>
                   <div className="space-y-5 md:space-y-8 relative pt-4 md:pt-6">
@@ -93,7 +93,7 @@ export function Blog({ posts }: BlogProps) {
                             className="group py-2 flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-4"
                           >
                             {post.tags && post.tags.length > 0 && (
-                              <span className="text-[13px] px-2 py-0.5 rounded-[4px] bg-[#121212]/[0.06] dark:bg-white/[0.06] text-[#121212]/60 dark:text-white/60 shrink-0 w-fit">
+                              <span className="text-[13px] px-2 py-0.5 rounded-[4px] bg-[#121212]/6 dark:bg-white/6 text-[#121212]/60 dark:text-white/60 shrink-0 w-fit">
                                 {post.tags[0]}
                               </span>
                             )}
