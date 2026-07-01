@@ -33,7 +33,7 @@ export function PostEditorPanel({
     <section className="grid gap-5">
       {editingSlug && (
         <div className="flex flex-col gap-3 rounded-lg border border-[#121212]/10 px-4 py-3 text-sm text-[#121212]/70 dark:border-white/10 dark:text-white/70 sm:flex-row sm:items-center sm:justify-between">
-          <span>?????posts/{editingSlug}.md</span>
+          <span>正在编辑 posts/{editingSlug}.md</span>
           <Button
             className="gap-2"
             type="button"
@@ -41,13 +41,13 @@ export function PostEditorPanel({
             onClick={onNewPost}
           >
             <Plus className="size-4" />
-            ????
+            新建文章
           </Button>
         </div>
       )}
 
       <div className="grid gap-4 md:grid-cols-2">
-        <Field label="??">
+        <Field label="标题">
           <input
             className="admin-input"
             value={post.title}
@@ -60,7 +60,7 @@ export function PostEditorPanel({
             }}
           />
         </Field>
-        <Field label="????">
+        <Field label="文章路径">
           <input
             className="admin-input"
             value={post.slug}
@@ -69,13 +69,13 @@ export function PostEditorPanel({
             }
           />
         </Field>
-        <Field label="????">
+        <Field label="发布时间">
           <DateTimePicker
             value={post.date}
             onChange={(date) => onPostChange({ date })}
           />
         </Field>
-        <Field label="??">
+        <Field label="标签">
           <input
             className="admin-input"
             placeholder="Design, Life"
@@ -85,7 +85,7 @@ export function PostEditorPanel({
         </Field>
       </div>
 
-      <Field label="??">
+      <Field label="摘要">
         <textarea
           className="admin-input min-h-24 resize-y"
           value={post.description}
@@ -108,10 +108,10 @@ export function PostEditorPanel({
               type="checkbox"
               onChange={(event) => onPostChange({ draft: event.target.checked })}
             />
-            ?????
+            保存为草稿
           </label>
           <p className="text-xs text-[#121212]/45 dark:text-white/45">
-            ?????????? posts ??????? draft: true?
+            勾选后文章会写入 posts 目录，但前台不会展示 draft: true。
           </p>
         </div>
         <div className="flex flex-wrap gap-2 sm:justify-end">
@@ -123,7 +123,7 @@ export function PostEditorPanel({
             onClick={onCancel}
           >
             <X className="size-4" />
-            ??
+            取消
           </Button>
           <Button
             className="gap-2"
@@ -137,7 +137,7 @@ export function PostEditorPanel({
             ) : (
               <Send size={18} />
             )}
-            {editingSlug ? '????' : '????'}
+            {editingSlug ? '更新文章' : '发布文章'}
           </Button>
         </div>
       </div>

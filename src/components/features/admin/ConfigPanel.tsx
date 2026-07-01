@@ -1,7 +1,12 @@
 'use client';
 
 import { Loader2, Save } from 'lucide-react';
-import type { ProfileConfig, SocialLink, WebsiteLink } from '@/types/platform-config';
+import { Button } from '@/components/ui/button';
+import type {
+  ProfileConfig,
+  SocialLink,
+  WebsiteLink,
+} from '@/types/platform-config';
 import { EditableListHeader, Field, IconButton } from './AdminShared';
 import { createId } from './utils';
 
@@ -208,7 +213,7 @@ export function ConfigPanel({
       </div>
 
       <div className="flex justify-end">
-        <button
+        <Button
           className="admin-primary-button"
           disabled={isSaving}
           type="button"
@@ -220,7 +225,7 @@ export function ConfigPanel({
             <Save size={18} />
           )}
           保存配置
-        </button>
+        </Button>
       </div>
     </section>
   );

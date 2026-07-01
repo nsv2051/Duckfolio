@@ -2,6 +2,7 @@
 
 import type { ReactNode } from 'react';
 import { Plus, Trash2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 export function AdminNotice({ children }: { children: ReactNode }) {
   return (
@@ -23,19 +24,20 @@ export function NavButton({
   onClick: () => void;
 }) {
   return (
-    <button
+    <Button
       className={[
-        'flex items-center gap-2 rounded-lg px-4 py-3 text-left text-sm transition-colors',
+        'h-auto w-full justify-start rounded-lg px-4 py-3 text-left text-sm transition-colors',
         active
-          ? 'bg-[#121212] text-white dark:bg-white dark:text-black'
-          : 'text-[#121212]/60 hover:bg-[#121212]/5 hover:text-[#121212] dark:text-white/60 dark:hover:bg-white/10 dark:hover:text-white',
+          ? 'bg-[#121212] text-white hover:bg-[#121212] hover:text-white dark:bg-white dark:text-black dark:hover:bg-white dark:hover:text-black'
+          : 'bg-transparent text-[#121212]/60 hover:bg-[#121212]/5 hover:text-[#121212] dark:bg-transparent dark:text-white/60 dark:hover:bg-white/10 dark:hover:text-white',
       ].join(' ')}
       type="button"
+      variant="ghost"
       onClick={onClick}
     >
       {icon}
       {label}
-    </button>
+    </Button>
   );
 }
 
@@ -60,14 +62,15 @@ export function EditableListHeader({
   return (
     <div className="flex items-center justify-between border-b border-[#121212]/10 pb-3 dark:border-white/10">
       <h2 className="text-lg font-medium">{label}</h2>
-      <button
+      <Button
         className="inline-flex h-9 items-center gap-2 rounded bg-[#121212]/5 px-3 text-sm transition-colors hover:bg-[#121212]/10 dark:bg-white/10 dark:hover:bg-white/15"
         type="button"
+        variant="ghost"
         onClick={onAdd}
       >
         <Plus size={16} />
-        ??
-      </button>
+        添加
+      </Button>
     </div>
   );
 }
@@ -80,14 +83,16 @@ export function IconButton({
   onClick: () => void;
 }) {
   return (
-    <button
+    <Button
       aria-label={label}
       className="flex size-10 items-center justify-center rounded border border-[#121212]/10 text-[#121212]/50 transition-colors hover:border-red-500/30 hover:bg-red-500/10 hover:text-red-600 dark:border-white/10 dark:text-white/50 dark:hover:text-red-300"
+      size="icon"
       title={label}
       type="button"
+      variant="ghost"
       onClick={onClick}
     >
       <Trash2 size={16} />
-    </button>
+    </Button>
   );
 }

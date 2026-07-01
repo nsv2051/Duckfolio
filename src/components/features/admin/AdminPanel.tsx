@@ -5,6 +5,7 @@ import { BarChart3, Check, EyeOff, Globe2, List, Settings2 } from 'lucide-react'
 import type { ProfileConfig } from '@/types/platform-config';
 import { AdminNoticeStack } from './AdminNoticeStack';
 import { NavButton } from './AdminShared';
+import { readAdminResponse } from './admin-api';
 import { ConfigPanel } from './ConfigPanel';
 import { DashboardPanel } from './DashboardPanel';
 import { PostEditorPanel } from './PostEditorPanel';
@@ -43,13 +44,15 @@ export function AdminPanel() {
     }
 
     fetch('/api/admin/status')
-      .then((response) => response.json() as Promise<ApiStatusResponse>)
+      .then((response) =>
+        readAdminResponse<ApiStatusResponse>(response, '后台状态读取失败。'),
+      )
       .then((data) => {
         setStatus(data.status);
         setConfig(data.config);
       })
-      .catch(() => {
-        setMessage('后台状态读取失败。');
+      .catch((error) => {
+        setMessage(error instanceof Error ? error.message : '后台状态读取失败。');
       });
   }, []);
 
@@ -123,13 +126,12 @@ export function AdminPanel() {
           'x-admin-token': adminToken,
         },
       });
-      const data = await response.json();
+      const data = await readAdminResponse<ApiPostsResponse>(
+        response,
+        '文章列表读取失败。',
+      );
 
-      if (!response.ok) {
-        throw new Error(data.message || '文章列表读取失败。');
-      }
-
-      setPosts((data as ApiPostsResponse).posts || []);
+      setPosts(data.posts || []);
     } catch (error) {
       setMessage(error instanceof Error ? error.message : '文章列表读取失败。');
     } finally {
@@ -155,13 +157,12 @@ export function AdminPanel() {
           },
         },
       );
-      const data = await response.json();
+      const data = await readAdminResponse<ApiPostResponse>(
+        response,
+        '文章读取失败。',
+      );
 
-      if (!response.ok) {
-        throw new Error(data.message || '文章读取失败。');
-      }
-
-      const detail = (data as ApiPostResponse).post;
+      const detail = data.post;
       const date = parseDateTime(detail.date) ?? new Date();
 
       setPost({
@@ -206,11 +207,10 @@ export function AdminPanel() {
         },
         method: 'PATCH',
       });
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || '文章状态更新失败。');
-      }
+      const data = await readAdminResponse<{ message?: string }>(
+        response,
+        '文章状态更新失败。',
+      );
 
       setPosts((current) =>
         current.map((item) =>
@@ -255,11 +255,10 @@ export function AdminPanel() {
           method: 'DELETE',
         },
       );
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || '文章删除失败。');
-      }
+      const data = await readAdminResponse<{ message?: string }>(
+        response,
+        '文章删除失败。',
+      );
 
       setPosts((current) => current.filter((item) => item.slug !== slug));
 
@@ -306,16 +305,21 @@ export function AdminPanel() {
         },
         method: 'POST',
       });
-      const data = await response.json();
+      const data = await readAdminResponse<{
+        message?: string;
+        result?: {
+          mode?: string;
+          path?: string;
+          repo?: string;
+        };
+        slug?: string;
+      }>(response, '文章发布失败。');
 
-      if (!response.ok) {
-        throw new Error(data.message || '文章发布失败。');
-      }
-
-      const targetMessage =
-        data.result?.mode === 'github'
+      const targetMessage = data.result
+        ? data.result.mode === 'github'
           ? `已推送到 ${data.result.repo}/${data.result.path}`
-          : `已写入 ${data.result.path}`;
+          : `已写入 ${data.result.path}`
+        : '文章已保存。';
 
       setMessage(
         data.message ? `${data.message} ${targetMessage}` : targetMessage,
@@ -343,16 +347,20 @@ export function AdminPanel() {
         },
         method: 'POST',
       });
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || '配置保存失败。');
-      }
+      const data = await readAdminResponse<{
+        result?: {
+          mode?: string;
+          path?: string;
+          repo?: string;
+        };
+      }>(response, '配置保存失败。');
 
       setMessage(
-        data.result?.mode === 'github'
-          ? `配置已推送到 ${data.result.repo}/${data.result.path}`
-          : `配置已写入 ${data.result.path}`,
+        data.result
+          ? data.result.mode === 'github'
+            ? `配置已推送到 ${data.result.repo}/${data.result.path}`
+            : `配置已写入 ${data.result.path}`
+          : '配置已保存。',
       );
     } catch (error) {
       setMessage(error instanceof Error ? error.message : '配置保存失败。');
