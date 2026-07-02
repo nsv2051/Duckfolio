@@ -2,31 +2,10 @@ import type React from 'react';
 import '../styles/globals.css';
 import { getConfig } from '@/lib/config';
 import type { Metadata } from 'next';
-import { Bad_Script, DM_Mono, Inter } from 'next/font/google';
 import { ThemeProvider } from '@/components/theme/theme-provider';
 import { ModeToggle } from '@/components/theme/toggle-theme';
 // import { CustomCursor } from '@/components/interactive/custom-cursor';
 import { RootLayoutClient } from '@/components/layout/RootLayoutClient';
-
-const inter = Inter({
-  display: 'swap',
-  subsets: ['latin'],
-  variable: '--font-inter',
-});
-
-const dmMono = DM_Mono({
-  display: 'swap',
-  subsets: ['latin'],
-  variable: '--font-dm-mono',
-  weight: ['400', '500'],
-});
-
-const badScript = Bad_Script({
-  display: 'swap',
-  subsets: ['latin'],
-  variable: '--font-bad-script',
-  weight: '400',
-});
 
 export function generateMetadata(): Metadata {
   const config = getConfig();
@@ -48,9 +27,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="zh-CN" className="h-full" suppressHydrationWarning>
-      <body
-        className={`${inter.variable} ${dmMono.variable} ${badScript.variable} h-full bg-background text-foreground`}
-      >
+      <body className="h-full bg-background text-foreground">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
