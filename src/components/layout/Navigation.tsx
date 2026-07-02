@@ -6,9 +6,10 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const navItems = [
-  { name: 'profile', href: '/' },
-  { name: 'links', href: '/links' },
-  { name: 'blog', href: '/posts' },
+  { name: 'profile', label: 'Profile', href: '/' },
+  { name: 'links', label: 'Links', href: '/links' },
+  { name: 'blog', label: 'Blog', href: '/posts' },
+  { name: 'projects', label: 'Projects', href: '/projects' },
 ];
 
 export function Navigation() {
@@ -19,6 +20,7 @@ export function Navigation() {
     if (pathname.startsWith('/links')) return 'links';
     if (pathname.startsWith('/posts') || pathname.startsWith('/blog'))
       return 'blog';
+    if (pathname.startsWith('/projects')) return 'projects';
     return 'profile';
   };
 
@@ -51,7 +53,7 @@ export function Navigation() {
       </motion.div>
 
       <motion.div
-        className="flex space-x-4 sm:space-x-8"
+        className="flex space-x-4 sm:space-x-7"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: 'easeOut', delay: 0.2 }}
@@ -60,13 +62,13 @@ export function Navigation() {
           <Link
             key={item.name}
             href={item.href}
-            className={`text-sm uppercase tracking-wider transition-colors ${
+            className={`text-[15px] font-medium tracking-wide transition-colors ${
               activeSection === item.name
                 ? 'text-[#121212] dark:text-white'
                 : 'text-[#121212]/60 dark:text-white/60 hover:text-[#121212] dark:hover:text-white'
             }`}
           >
-            {item.name}
+            {item.label}
             {activeSection === item.name && (
               <motion.div
                 className="h-0.5 bg-[#121212] dark:bg-white mt-1"

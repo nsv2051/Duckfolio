@@ -171,6 +171,19 @@ export function validatePlatformConfig(config: ProfileConfig): ProfileConfig {
       bio: String(config.profile?.bio || ''),
       name: String(config.profile?.name || ''),
     },
+    projectSections: (config.projectSections || []).map((section) => ({
+      id: String(section.id || ''),
+      projects: (section.projects || []).map((project) => ({
+        description: project.description
+          ? String(project.description)
+          : undefined,
+        icon: project.icon ? String(project.icon) : undefined,
+        id: String(project.id || ''),
+        title: String(project.title || ''),
+        url: String(project.url || ''),
+      })),
+      title: String(section.title || ''),
+    })),
     socialLinks: (config.socialLinks || []).map((link) => ({
       icon: String(link.icon || ''),
       id: String(link.id || ''),
@@ -229,7 +242,9 @@ export async function writeRepositoryFile(
   return writeLocalFile(options);
 }
 
-export async function deleteRepositoryPost(slug: string): Promise<WriteFileResult> {
+export async function deleteRepositoryPost(
+  slug: string,
+): Promise<WriteFileResult> {
   const normalizedSlug = normalizePostSlug(slug);
 
   if (!normalizedSlug) {
@@ -246,7 +261,9 @@ export async function deleteRepositoryPost(slug: string): Promise<WriteFileResul
     });
   }
 
-  throw new Error('未配置 GitHub 写入，已阻止在本地 main 工作区删除 posts 文件。');
+  throw new Error(
+    '未配置 GitHub 写入，已阻止在本地 main 工作区删除 posts 文件。',
+  );
 }
 
 export async function updateRepositoryPostDraft(
@@ -553,7 +570,7 @@ async function listGitHubPosts(
     (item) => item.type === 'file' && isPostFileName(item.name),
   );
 
-  const posts = await Promise.all(
+  const postResults = await Promise.allSettled(
     markdownFiles.map(async (item) => {
       const encodedPath = item.path
         .split('/')
@@ -572,7 +589,14 @@ async function listGitHubPosts(
     }),
   );
 
-  return sortPosts(posts);
+  return sortPosts(
+    postResults
+      .filter(
+        (result): result is PromiseFulfilledResult<AdminPostSummary> =>
+          result.status === 'fulfilled',
+      )
+      .map((result) => result.value),
+  );
 }
 
 async function githubRequest<T>(

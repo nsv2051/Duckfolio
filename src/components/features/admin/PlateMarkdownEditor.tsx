@@ -6,7 +6,6 @@ import { motion } from 'framer-motion';
 import { Maximize2, Minimize2 } from 'lucide-react';
 import type { Value } from 'platejs';
 import { Plate, usePlateEditor } from 'platejs/react';
-import { Toaster } from 'sonner';
 
 import { EditorKit } from '@/components/editor/editor-kit';
 import { SettingsDialog } from '@/components/editor/settings-dialog';
@@ -136,8 +135,6 @@ export function PlateMarkdownEditor({
           </TooltipContent>
         </Tooltip>
       </motion.div>
-
-      <Toaster />
     </TooltipProvider>
   );
 }

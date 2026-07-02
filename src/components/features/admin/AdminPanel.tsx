@@ -8,14 +8,8 @@ import {
   useState,
   type ReactNode,
 } from 'react';
-import {
-  BarChart3,
-  Check,
-  EyeOff,
-  Globe2,
-  List,
-  Settings2,
-} from 'lucide-react';
+import { BarChart3, EyeOff, Globe2, List, Settings2 } from 'lucide-react';
+import { toast, Toaster } from 'sonner';
 import type { ProfileConfig } from '@/types/platform-config';
 import { AdminNoticeStack } from './AdminNoticeStack';
 import { NavButton } from './AdminShared';
@@ -40,12 +34,14 @@ import {
   toDatetimeLocal,
 } from './utils';
 
+const PUBLISH_LIST_REFRESH_DELAY_MS = 1600;
+type MessageType = 'success' | 'error' | 'warning' | 'info';
+
 export function AdminPanel() {
   const [tab, setTab] = useState<Tab>('home');
   const [adminToken, setAdminToken] = useState('');
   const [status, setStatus] = useState<AdminStatus | null>(null);
   const [config, setConfig] = useState<ProfileConfig>(emptyConfig);
-  const [message, setMessage] = useState('');
   const [isPublishing, setIsPublishing] = useState(false);
   const [isSavingConfig, setIsSavingConfig] = useState(false);
   const [isLoadingPosts, setIsLoadingPosts] = useState(false);
@@ -55,6 +51,15 @@ export function AdminPanel() {
   const [editorKey, setEditorKey] = useState(0);
   const [mutatingPostSlug, setMutatingPostSlug] = useState<string | null>(null);
   const skipNextPostsAutoLoadRef = useRef(false);
+  const pendingPublishedPostRef = useRef<AdminPostSummary | null>(null);
+
+  const notify = useCallback((content: string, type: MessageType = 'info') => {
+    if (!content) {
+      return;
+    }
+
+    toast[type](content);
+  }, []);
 
   useEffect(() => {
     const storedToken = window.localStorage.getItem('duckfolio-admin-token');
@@ -72,11 +77,12 @@ export function AdminPanel() {
         setConfig(data.config);
       })
       .catch((error) => {
-        setMessage(
+        notify(
           error instanceof Error ? error.message : '后台状态读取失败。',
+          'error',
         );
       });
-  }, []);
+  }, [notify]);
 
   useEffect(() => {
     window.localStorage.setItem('duckfolio-admin-token', adminToken);
@@ -138,16 +144,13 @@ export function AdminPanel() {
   }, [clearPostForm]);
 
   const loadPosts = useCallback(
-    async (options?: { keepMessage?: boolean }) => {
+    async (options?: { keepMessage?: boolean; silentError?: boolean }) => {
       if (!adminToken) {
         setPosts([]);
         return;
       }
 
       setIsLoadingPosts(true);
-      if (!options?.keepMessage) {
-        setMessage('');
-      }
 
       try {
         const response = await fetch('/api/admin/posts', {
@@ -160,26 +163,45 @@ export function AdminPanel() {
           '文章列表读取失败。',
         );
 
-        setPosts(data.posts || []);
-      } catch (error) {
-        setMessage(
-          error instanceof Error ? error.message : '文章列表读取失败。',
+        const nextPosts = data.posts || [];
+        const pendingPost = pendingPublishedPostRef.current;
+        const hasPendingPost =
+          pendingPost &&
+          nextPosts.some((item) => item.slug === pendingPost.slug);
+
+        if (hasPendingPost) {
+          pendingPublishedPostRef.current = null;
+        }
+
+        setPosts(
+          pendingPost && !hasPendingPost
+            ? [
+                pendingPost,
+                ...nextPosts.filter((item) => item.slug !== pendingPost.slug),
+              ]
+            : nextPosts,
         );
+      } catch (error) {
+        if (!options?.silentError) {
+          notify(
+            error instanceof Error ? error.message : '文章列表读取失败。',
+            'error',
+          );
+        }
       } finally {
         setIsLoadingPosts(false);
       }
     },
-    [adminToken],
+    [adminToken, notify],
   );
 
   const editPost = async (slug: string) => {
     if (!adminToken) {
-      setMessage('请先输入管理员口令。');
+      notify('请先输入管理员口令。', 'warning');
       return;
     }
 
     setMutatingPostSlug(slug);
-    setMessage('');
 
     try {
       const response = await fetch(
@@ -211,7 +233,10 @@ export function AdminPanel() {
       setEditorKey((current) => current + 1);
       setTab('post');
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : '文章读取失败。');
+      notify(
+        error instanceof Error ? error.message : '文章读取失败。',
+        'error',
+      );
     } finally {
       setMutatingPostSlug(null);
     }
@@ -219,13 +244,12 @@ export function AdminPanel() {
 
   const togglePostVisibility = async (targetPost: AdminPostSummary) => {
     if (!adminToken) {
-      setMessage('请先输入管理员口令。');
+      notify('请先输入管理员口令。', 'warning');
       return;
     }
 
     const nextDraft = !targetPost.draft;
     setMutatingPostSlug(targetPost.slug);
-    setMessage('');
 
     try {
       const response = await fetch('/api/admin/posts', {
@@ -255,9 +279,12 @@ export function AdminPanel() {
         updatePost({ draft: nextDraft });
       }
 
-      setMessage(data.message || '文章状态已更新。');
+      notify(data.message || '文章状态已更新。', 'success');
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : '文章状态更新失败。');
+      notify(
+        error instanceof Error ? error.message : '文章状态更新失败。',
+        'error',
+      );
     } finally {
       setMutatingPostSlug(null);
     }
@@ -265,7 +292,7 @@ export function AdminPanel() {
 
   const deletePost = async (slug: string) => {
     if (!adminToken) {
-      setMessage('请先输入管理员口令。');
+      notify('请先输入管理员口令。', 'warning');
       return;
     }
 
@@ -276,7 +303,6 @@ export function AdminPanel() {
     }
 
     setMutatingPostSlug(slug);
-    setMessage('');
 
     try {
       const response = await fetch(
@@ -294,14 +320,20 @@ export function AdminPanel() {
       );
 
       setPosts((current) => current.filter((item) => item.slug !== slug));
+      if (pendingPublishedPostRef.current?.slug === slug) {
+        pendingPublishedPostRef.current = null;
+      }
 
       if (editingSlug === slug) {
         clearPostForm();
       }
 
-      setMessage(data.message || '文章已删除。');
+      notify(data.message || '文章已删除。', 'success');
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : '文章删除失败。');
+      notify(
+        error instanceof Error ? error.message : '文章删除失败。',
+        'error',
+      );
     } finally {
       setMutatingPostSlug(null);
     }
@@ -320,21 +352,23 @@ export function AdminPanel() {
 
   const publishPost = async () => {
     setIsPublishing(true);
-    setMessage('');
 
     try {
+      const publishedDate = new Date(post.date || Date.now()).toISOString();
+      const postTags = post.tags
+        .split(/[,，]/)
+        .map((tag) => tag.trim())
+        .filter(Boolean);
+
       const response = await fetch('/api/admin/posts', {
         body: JSON.stringify({
           content: post.content,
-          date: new Date(post.date || Date.now()).toISOString(),
+          date: publishedDate,
           description: post.description,
           draft: post.draft,
           originalSlug: editingSlug,
           slug: post.slug,
-          tags: post.tags
-            .split(/[,，]/)
-            .map((tag) => tag.trim())
-            .filter(Boolean),
+          tags: postTags,
           title: post.title,
         }),
         headers: {
@@ -362,15 +396,34 @@ export function AdminPanel() {
       const successMessage = data.message
         ? `${data.message} ${targetMessage}`
         : targetMessage;
+      const publishedSlug = data.slug || post.slug;
+      const publishedPost: AdminPostSummary = {
+        date: publishedDate,
+        description: post.description,
+        draft: post.draft,
+        path: data.result?.path || `posts/${publishedSlug}.md`,
+        slug: publishedSlug,
+        tags: postTags,
+        title: post.title,
+      };
 
       clearPostForm();
+      pendingPublishedPostRef.current = publishedPost;
+      setPosts((current) => [
+        publishedPost,
+        ...current.filter((item) => item.slug !== publishedSlug),
+      ]);
       skipNextPostsAutoLoadRef.current = true;
       setTab('posts');
-      setMessage(successMessage);
-      await loadPosts({ keepMessage: true });
-      setMessage(successMessage);
+      notify(successMessage, 'success');
+      window.setTimeout(() => {
+        void loadPosts({ keepMessage: true, silentError: true });
+      }, PUBLISH_LIST_REFRESH_DELAY_MS);
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : '文章发布失败。');
+      notify(
+        error instanceof Error ? error.message : '文章发布失败。',
+        'error',
+      );
     } finally {
       setIsPublishing(false);
     }
@@ -378,7 +431,6 @@ export function AdminPanel() {
 
   const saveConfig = async () => {
     setIsSavingConfig(true);
-    setMessage('');
 
     try {
       const response = await fetch('/api/admin/config', {
@@ -397,15 +449,19 @@ export function AdminPanel() {
         };
       }>(response, '配置保存失败。');
 
-      setMessage(
+      notify(
         data.result
           ? data.result.mode === 'github'
             ? `配置已推送到 ${data.result.repo}/${data.result.path}`
             : `配置已写入 ${data.result.path}`
           : '配置已保存。',
+        'success',
       );
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : '配置保存失败。');
+      notify(
+        error instanceof Error ? error.message : '配置保存失败。',
+        'error',
+      );
     } finally {
       setIsSavingConfig(false);
     }
@@ -413,6 +469,7 @@ export function AdminPanel() {
 
   return (
     <main className="min-h-screen bg-white text-[#121212] dark:bg-black dark:text-white">
+      <Toaster closeButton richColors position="top-center" />
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 pb-16 pt-6 md:px-8 md:pt-8">
         <header className="flex flex-col gap-4 border-b border-[#121212]/10 pb-6 dark:border-white/10 md:flex-row md:items-end md:justify-between">
           <div>
@@ -444,13 +501,6 @@ export function AdminPanel() {
         </header>
 
         <AdminNoticeStack notices={notices} />
-
-        {message && (
-          <div className="flex items-center gap-2 rounded-lg border border-[#121212]/10 px-4 py-3 text-sm text-[#121212]/70 dark:border-white/10 dark:text-white/70">
-            <Check size={16} />
-            {message}
-          </div>
-        )}
 
         <div className="grid gap-6 lg:grid-cols-[220px_minmax(0,1fr)]">
           <aside className="flex gap-2 lg:flex-col">
