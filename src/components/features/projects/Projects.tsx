@@ -66,7 +66,7 @@ export function Projects({
           </div>
         </aside>
 
-        <main className="mx-auto grid w-full max-w-5xl gap-10 lg:pr-8">
+        <main className="mx-auto grid w-full max-w-7xl gap-10 lg:pr-8">
           {visibleSections.map((section, sectionIndex) => (
             <motion.section
               key={section.title}
@@ -84,7 +84,7 @@ export function Projects({
                 {section.title}
               </h2>
 
-              <div className="relative -mt-3 grid gap-x-20 gap-y-9 pl-10 md:-mt-4 md:grid-cols-2 xl:pl-20">
+              <div className="relative mt-1 grid gap-x-20 gap-y-9 pl-10 md:mt-2 md:grid-cols-3 xl:pl-20">
                 {section.projects.map((project) => {
                   return (
                     <a

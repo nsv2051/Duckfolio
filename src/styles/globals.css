@@ -5,14 +5,6 @@
 
 @custom-variant dark (&:is(.dark *));
 
-@font-face {
-  font-family: 'Roboto Condensed Local';
-  font-style: normal;
-  font-weight: 400 700;
-  font-display: swap;
-  src: url('/fonts/robotocondensed-531bd174.woff2') format('woff2');
-}
-
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -33,16 +25,6 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
   --color-brand: var(--brand);
-  --font-sans:
-    var(--font-inter), ui-sans-serif, system-ui, -apple-system,
-    BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-mono:
-    var(--font-dm-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-    'Liberation Mono', 'Courier New', monospace;
-  --font-condensed:
-    'Roboto Condensed Local', 'Arial Narrow', var(--font-inter), ui-sans-serif,
-    system-ui, sans-serif;
-  --font-wisper: var(--font-bad-script), cursive;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -134,7 +116,6 @@
   body {
     @apply bg-background text-foreground;
     font-family:
-      var(--font-inter),
       ui-sans-serif,
       system-ui,
       -apple-system,
