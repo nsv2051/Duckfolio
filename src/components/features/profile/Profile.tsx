@@ -1,7 +1,9 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { Circle } from 'lucide-react';
 import Image from 'next/image';
+import { ConfigIcon } from '@/lib/icon-registry';
 import { Profile as ProfileType, SocialLink } from '@/types/platform-config';
 
 interface ProfileProps {
@@ -96,9 +98,11 @@ export function Profile({ profile, socialLinks }: ProfileProps) {
                 animation: `fadeIn 0.5s ease-out ${0.5 + index * 0.1}s forwards`,
               }}
             >
-              <span
-                dangerouslySetInnerHTML={{ __html: link.icon }}
-                className="text-2xl"
+              <ConfigIcon
+                className="size-6"
+                fallback={Circle}
+                icon={link.icon}
+                svgClassName="text-2xl [&_svg]:size-6"
               />
             </a>
           ))}

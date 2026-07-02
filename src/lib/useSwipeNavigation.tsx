@@ -4,18 +4,20 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { PanInfo } from 'framer-motion';
 
-type SectionType = 'profile' | 'links' | 'blog';
+type SectionType = 'profile' | 'links' | 'blog' | 'projects';
 
 const routeMap: Record<SectionType, string> = {
   profile: '/',
   links: '/links',
   blog: '/posts',
+  projects: '/projects',
 };
 
 const pathToSection: Record<string, SectionType> = {
   '/': 'profile',
   '/links': 'links',
   '/posts': 'blog',
+  '/projects': 'projects',
 };
 
 export function useSwipeNavigation() {
@@ -61,9 +63,13 @@ export function useSwipeNavigation() {
           router.push('/links');
         } else if (activeSection === 'links') {
           router.push('/posts');
+        } else if (activeSection === 'blog') {
+          router.push('/projects');
         }
       } else if (isRightSwipe) {
-        if (activeSection === 'blog') {
+        if (activeSection === 'projects') {
+          router.push('/posts');
+        } else if (activeSection === 'blog') {
           router.push('/links');
         } else if (activeSection === 'links') {
           router.push('/');

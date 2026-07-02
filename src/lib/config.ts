@@ -10,13 +10,24 @@ const fallbackConfig: ProfileConfig = {
     bio: '',
     name: 'Duckfolio',
   },
+  projectSections: [],
   socialLinks: [],
   websiteLinks: [],
 };
 
 export function getConfig(): ProfileConfig {
   try {
-    return JSON.parse(fs.readFileSync(configPath, 'utf8')) as ProfileConfig;
+    const config = JSON.parse(
+      fs.readFileSync(configPath, 'utf8'),
+    ) as ProfileConfig;
+
+    return {
+      ...fallbackConfig,
+      ...config,
+      projectSections: config.projectSections || [],
+      socialLinks: config.socialLinks || [],
+      websiteLinks: config.websiteLinks || [],
+    };
   } catch {
     return fallbackConfig;
   }

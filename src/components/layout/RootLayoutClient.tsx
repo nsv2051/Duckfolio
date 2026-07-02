@@ -20,7 +20,7 @@ export function RootLayoutClient({ children }: RootLayoutClientProps) {
   const isAdmin = pathname.startsWith('/admin');
 
   return (
-    <div className="relative min-h-screen w-full text-[#121212] dark:text-[#f0f0f0] overflow-hidden flex flex-col">
+    <div className="relative flex min-h-screen w-full flex-col overflow-x-clip text-[#121212] dark:text-[#f0f0f0]">
       {!isAdmin && <Navigation />}
 
       <motion.main
@@ -28,7 +28,7 @@ export function RootLayoutClient({ children }: RootLayoutClientProps) {
           'relative z-10 flex-1 w-full flex flex-col',
           isAdmin
             ? 'mx-0 px-0'
-            : 'mx-auto px-4 sm:px-6 md:w-4/5 md:px-8 lg:w-3/4 xl:w-2/3'
+            : 'mx-auto px-4 sm:px-6 md:w-4/5 md:px-8 lg:w-3/4 xl:w-2/3',
         )}
         {...(isAdmin ? {} : dragProps)}
       >

@@ -7,6 +7,7 @@ export const emptyConfig: ProfileConfig = {
     bio: '',
     name: '',
   },
+  projectSections: [],
   socialLinks: [],
   websiteLinks: [],
 };

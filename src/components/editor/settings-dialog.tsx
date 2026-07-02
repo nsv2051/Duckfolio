@@ -12,6 +12,7 @@ import {
   ExternalLinkIcon,
   Eye,
   EyeOff,
+  Loader2,
   Settings,
   Wand2Icon,
 } from 'lucide-react';
@@ -239,8 +240,17 @@ export function SettingsDialog() {
   const [open, setOpen] = React.useState(false);
   const [openModel, setOpenModel] = React.useState(false);
   const [hasLoadedSession, setHasLoadedSession] = React.useState(false);
+  const [availableModels, setAvailableModels] =
+    React.useState<Model[]>(models);
+  const [isLoadingModels, setIsLoadingModels] = React.useState(false);
+  const [modelFetchStatus, setModelFetchStatus] = React.useState('');
 
-  const tempModel = models.find((model) => model.value === tempModelId) ?? null;
+  const hasCustomBaseUrl = Boolean(tempKeys.aiBaseUrl.trim());
+  const modelOptions = hasCustomBaseUrl ? availableModels : models;
+  const tempModel =
+    modelOptions.find((model) => model.value === tempModelId) ??
+    models.find((model) => model.value === tempModelId) ??
+    null;
   const aiOptions = React.useMemo<AiSettings>(
     () => ({
       apiKey: tempKeys.aiGatewayApiKey,
@@ -319,6 +329,96 @@ export function SettingsDialog() {
     );
     applyAiOptions(aiOptions);
   }, [aiOptions, applyAiOptions, hasLoadedSession, isAdmin]);
+
+  React.useEffect(() => {
+    if (!isAdmin || !hasLoadedSession) {
+      return;
+    }
+
+    const apiKey = tempKeys.aiGatewayApiKey.trim();
+    const baseURL = tempKeys.aiBaseUrl.trim();
+
+    if (!baseURL) {
+      setAvailableModels(models);
+      setModelFetchStatus('');
+      setIsLoadingModels(false);
+      return;
+    }
+
+    if (!apiKey) {
+      setAvailableModels([]);
+      setModelFetchStatus('填写 API Key 后会读取该 Base URL 的模型。');
+      setIsLoadingModels(false);
+      return;
+    }
+
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => {
+      setIsLoadingModels(true);
+      setModelFetchStatus('正在读取模型列表...');
+
+      void fetch('/api/ai/models', {
+        body: JSON.stringify({ apiKey, baseURL }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        method: 'POST',
+        signal: controller.signal,
+      })
+        .then(async (response) => {
+          const data = (await response.json()) as {
+            message?: string;
+            models?: Model[];
+          };
+
+          if (!response.ok) {
+            throw new Error(data.message || '模型列表读取失败。');
+          }
+
+          const nextModels = (data.models || []).filter(
+            (model) => model.value,
+          );
+
+          setAvailableModels(nextModels);
+          setModelFetchStatus(
+            nextModels.length
+              ? `已读取 ${nextModels.length} 个模型。`
+              : '未读取到模型，可手动填写 Model ID。',
+          );
+          setTempModelId((current) =>
+            nextModels.length &&
+            !nextModels.some((model) => model.value === current)
+              ? nextModels[0].value
+              : current,
+          );
+        })
+        .catch((error) => {
+          if (controller.signal.aborted) {
+            return;
+          }
+
+          setAvailableModels([]);
+          setModelFetchStatus(
+            error instanceof Error ? error.message : '模型列表读取失败。',
+          );
+        })
+        .finally(() => {
+          if (!controller.signal.aborted) {
+            setIsLoadingModels(false);
+          }
+        });
+    }, 600);
+
+    return () => {
+      window.clearTimeout(timeout);
+      controller.abort();
+    };
+  }, [
+    hasLoadedSession,
+    isAdmin,
+    tempKeys.aiBaseUrl,
+    tempKeys.aiGatewayApiKey,
+  ]);
 
   if (!isAdmin) {
     return null;
@@ -471,10 +571,12 @@ export function SettingsDialog() {
                   <PopoverContent className="w-full p-0">
                     <Command>
                       <CommandInput placeholder="Search model..." />
-                      <CommandEmpty>No model found.</CommandEmpty>
+                      <CommandEmpty>
+                        {isLoadingModels ? 'Loading models...' : 'No model found.'}
+                      </CommandEmpty>
                       <CommandList>
                         <CommandGroup>
-                          {models.map((m) => (
+                          {modelOptions.map((m) => (
                             <CommandItem
                               key={m.value}
                               value={m.value}
@@ -499,6 +601,14 @@ export function SettingsDialog() {
                     </Command>
                   </PopoverContent>
                 </Popover>
+                {modelFetchStatus && (
+                  <p className="text-muted-foreground flex items-center gap-2 text-xs">
+                    {isLoadingModels && (
+                      <Loader2 className="size-3 animate-spin" />
+                    )}
+                    {modelFetchStatus}
+                  </p>
+                )}
               </div>
 
               <div className="grid gap-2">
