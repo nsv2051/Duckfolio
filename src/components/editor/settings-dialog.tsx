@@ -1,7 +1,5 @@
 'use client';
 
-/* DEMO ONLY, DO NOT USE IN PRODUCTION */
-
 import * as React from 'react';
 
 import { motion } from 'framer-motion';
@@ -240,8 +238,7 @@ export function SettingsDialog() {
   const [open, setOpen] = React.useState(false);
   const [openModel, setOpenModel] = React.useState(false);
   const [hasLoadedSession, setHasLoadedSession] = React.useState(false);
-  const [availableModels, setAvailableModels] =
-    React.useState<Model[]>(models);
+  const [availableModels, setAvailableModels] = React.useState<Model[]>(models);
   const [isLoadingModels, setIsLoadingModels] = React.useState(false);
   const [modelFetchStatus, setModelFetchStatus] = React.useState('');
 
@@ -375,9 +372,7 @@ export function SettingsDialog() {
             throw new Error(data.message || '模型列表读取失败。');
           }
 
-          const nextModels = (data.models || []).filter(
-            (model) => model.value,
-          );
+          const nextModels = (data.models || []).filter((model) => model.value);
 
           setAvailableModels(nextModels);
           setModelFetchStatus(
@@ -413,12 +408,7 @@ export function SettingsDialog() {
       window.clearTimeout(timeout);
       controller.abort();
     };
-  }, [
-    hasLoadedSession,
-    isAdmin,
-    tempKeys.aiBaseUrl,
-    tempKeys.aiGatewayApiKey,
-  ]);
+  }, [hasLoadedSession, isAdmin, tempKeys.aiBaseUrl, tempKeys.aiGatewayApiKey]);
 
   if (!isAdmin) {
     return null;
@@ -480,7 +470,7 @@ export function SettingsDialog() {
               target="_blank"
             >
               <ExternalLinkIcon className="size-4" />
-              <span className="sr-only">Get {label}</span>
+              <span className="sr-only">获取 {label}</span>
             </a>
           </Button>
           <Button
@@ -495,7 +485,7 @@ export function SettingsDialog() {
               <Eye className="size-4" />
             )}
             <span className="sr-only">
-              {showKey[service] ? 'Hide' : 'Show'} {label}
+              {showKey[service] ? '隐藏' : '显示'} {label}
             </span>
           </Button>
         </div>
@@ -523,10 +513,8 @@ export function SettingsDialog() {
       </motion.div>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="text-xl">Settings</DialogTitle>
-          <DialogDescription>
-            Configure your API keys and preferences.
-          </DialogDescription>
+          <DialogTitle className="text-xl">设置</DialogTitle>
+          <DialogDescription>配置 AI 接口密钥和偏好设置。</DialogDescription>
         </DialogHeader>
 
         <form className="space-y-10" onSubmit={handleSubmit}>
@@ -540,11 +528,11 @@ export function SettingsDialog() {
             </div>
 
             <div className="space-y-4">
-              {renderApiKeyInput('aiGatewayApiKey', 'AI API Key')}
+              {renderApiKeyInput('aiGatewayApiKey', 'AI API 密钥')}
 
               {renderTextInput(
                 'aiBaseUrl',
-                'Base URL',
+                'Base URL（接口地址）',
                 'https://api.openai.com/v1',
               )}
 
@@ -553,7 +541,7 @@ export function SettingsDialog() {
                   className="text-muted-foreground text-sm"
                   htmlFor="select-model"
                 >
-                  Model
+                  模型
                 </label>
                 <Popover open={openModel} onOpenChange={setOpenModel}>
                   <PopoverTrigger id="select-model" asChild>
@@ -568,11 +556,14 @@ export function SettingsDialog() {
                       <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className="w-full p-0">
+                  <PopoverContent
+                    className="w-full p-0"
+                    onWheel={(e) => e.stopPropagation()}
+                  >
                     <Command>
-                      <CommandInput placeholder="Search model..." />
+                      <CommandInput placeholder="搜索模型..." />
                       <CommandEmpty>
-                        {isLoadingModels ? 'Loading models...' : 'No model found.'}
+                        {isLoadingModels ? '正在加载模型...' : '未找到模型。'}
                       </CommandEmpty>
                       <CommandList>
                         <CommandGroup>
@@ -616,7 +607,7 @@ export function SettingsDialog() {
                   className="text-muted-foreground text-sm"
                   htmlFor="model-id"
                 >
-                  Model ID
+                  模型 ID
                 </label>
                 <Input
                   id="model-id"
@@ -628,12 +619,12 @@ export function SettingsDialog() {
             </div>
           </div>
           <Button size="lg" className="w-full" type="submit">
-            Save changes
+            保存设置
           </Button>
         </form>
 
         <p className="text-muted-foreground text-sm">
-          Stored in this browser tab session. Closing the tab clears it.
+          配置仅保存在当前浏览器标签页的会话中，关闭标签页后会自动清除。
         </p>
       </DialogContent>
     </Dialog>

@@ -8,8 +8,26 @@ import {
   useState,
   type ReactNode,
 } from 'react';
-import { BarChart3, EyeOff, Globe2, List, Settings2 } from 'lucide-react';
+import {
+  BarChart3,
+  ChevronDown,
+  Globe2,
+  Home,
+  List,
+  Lock,
+  LogIn,
+  LogOut,
+  Settings2,
+} from 'lucide-react';
+import Link from 'next/link';
 import { toast, Toaster } from 'sonner';
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import type { ProfileConfig } from '@/types/platform-config';
 import { AdminNoticeStack } from './AdminNoticeStack';
 import { NavButton } from './AdminShared';
@@ -24,7 +42,6 @@ import type {
   ApiPostResponse,
   ApiPostsResponse,
   ApiStatusResponse,
-  PostFormState,
   Tab,
 } from './types';
 import {
@@ -40,6 +57,9 @@ type MessageType = 'success' | 'error' | 'warning' | 'info';
 export function AdminPanel() {
   const [tab, setTab] = useState<Tab>('home');
   const [adminToken, setAdminToken] = useState('');
+  const [unlocked, setUnlocked] = useState(false);
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [loginInput, setLoginInput] = useState('');
   const [status, setStatus] = useState<AdminStatus | null>(null);
   const [config, setConfig] = useState<ProfileConfig>(emptyConfig);
   const [isPublishing, setIsPublishing] = useState(false);
@@ -61,11 +81,59 @@ export function AdminPanel() {
     toast[type](content);
   }, []);
 
+  const verifyToken = useCallback(async (token: string) => {
+    setIsVerifying(true);
+
+    try {
+      const response = await fetch('/api/admin/verify', {
+        headers: { 'x-admin-token': token },
+        method: 'POST',
+      });
+
+      if (response.ok) {
+        setAdminToken(token);
+        window.localStorage.setItem('duckfolio-admin-token', token);
+        setUnlocked(true);
+        return true;
+      }
+
+      return false;
+    } catch {
+      return false;
+    } finally {
+      setIsVerifying(false);
+    }
+  }, []);
+
+  const handleLogin = useCallback(async () => {
+    if (!loginInput.trim()) {
+      notify('请输入管理员口令。', 'warning');
+      return;
+    }
+
+    const ok = await verifyToken(loginInput.trim());
+
+    if (!ok) {
+      notify('管理员口令不正确。', 'error');
+    }
+  }, [loginInput, notify, verifyToken]);
+
+  const handleLogout = useCallback(() => {
+    window.localStorage.removeItem('duckfolio-admin-token');
+    setAdminToken('');
+    setLoginInput('');
+    setUnlocked(false);
+  }, []);
+
   useEffect(() => {
     const storedToken = window.localStorage.getItem('duckfolio-admin-token');
 
     if (storedToken) {
-      setAdminToken(storedToken);
+      void verifyToken(storedToken).then((ok) => {
+        if (!ok) {
+          window.localStorage.removeItem('duckfolio-admin-token');
+        }
+      });
     }
 
     fetch('/api/admin/status')
@@ -82,11 +150,7 @@ export function AdminPanel() {
           'error',
         );
       });
-  }, [notify]);
-
-  useEffect(() => {
-    window.localStorage.setItem('duckfolio-admin-token', adminToken);
-  }, [adminToken]);
+  }, [notify, verifyToken]);
 
   const targetText = useMemo(() => {
     if (!status) {
@@ -467,6 +531,69 @@ export function AdminPanel() {
     }
   };
 
+  if (!unlocked) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-white text-[#121212] dark:bg-black dark:text-white">
+        <Toaster closeButton richColors position="top-center" />
+        <div className="mx-auto w-full max-w-sm px-4">
+          <div className="flex flex-col items-center gap-6">
+            <div className="flex size-16 items-center justify-center rounded-full bg-[#121212]/5 dark:bg-white/10">
+              <Lock
+                size={28}
+                className="text-[#121212]/40 dark:text-white/40"
+              />
+            </div>
+            <div className="text-center">
+              <p className="text-sm uppercase tracking-wider text-[#121212]/40 dark:text-white/40">
+                Duckfolio Admin
+              </p>
+              <h1 className="mt-2 text-2xl font-semibold">管理员验证</h1>
+            </div>
+            <div className="flex w-full flex-col gap-3">
+              <input
+                className="w-full rounded-lg border border-[#121212]/10 bg-transparent px-4 py-3 text-sm outline-none transition-colors focus:border-[#121212]/30 placeholder:text-[#121212]/30 dark:border-white/10 dark:focus:border-white/30 dark:placeholder:text-white/30"
+                placeholder="请输入管理员口令"
+                type="password"
+                value={loginInput}
+                onChange={(event) => setLoginInput(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') {
+                    void handleLogin();
+                  }
+                }}
+              />
+              <Button
+                className="w-full rounded-lg bg-[#121212] py-3 text-sm text-white transition-colors hover:bg-[#121212]/80 disabled:opacity-50 dark:bg-white dark:text-black dark:hover:bg-white/80"
+                disabled={isVerifying}
+                type="button"
+                onClick={handleLogin}
+              >
+                {isVerifying ? (
+                  '验证中…'
+                ) : (
+                  <span className="inline-flex items-center gap-2">
+                    <LogIn size={16} />
+                    进入管理后台
+                  </span>
+                )}
+              </Button>
+              <Button
+                asChild
+                className="w-full rounded-lg text-sm"
+                variant="ghost"
+              >
+                <Link href="/">
+                  <Home size={16} />
+                  返回首页
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main className="min-h-screen bg-white text-[#121212] dark:bg-black dark:text-white">
       <Toaster closeButton richColors position="top-center" />
@@ -484,19 +611,29 @@ export function AdminPanel() {
               <Globe2 size={16} />
               {targetText}
             </div>
-            <label className="flex min-w-0 items-center gap-2 rounded border border-[#121212]/10 px-3 py-2 dark:border-white/10">
-              <EyeOff
-                size={16}
-                className="shrink-0 text-[#121212]/40 dark:text-white/40"
-              />
-              <input
-                className="w-48 bg-transparent text-sm outline-none placeholder:text-[#121212]/30 dark:placeholder:text-white/30"
-                placeholder="管理员口令"
-                type="password"
-                value={adminToken}
-                onChange={(event) => setAdminToken(event.target.value)}
-              />
-            </label>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  className="inline-flex items-center gap-2 rounded border border-[#121212]/10 px-3 py-2 text-sm text-[#121212]/60 hover:text-[#121212] dark:border-white/10 dark:text-white/60 dark:hover:text-white"
+                  variant="ghost"
+                >
+                  操作
+                  <ChevronDown size={14} />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem asChild>
+                  <Link href="/">
+                    <Home size={16} />
+                    返回首页
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleLogout}>
+                  <LogOut size={16} />
+                  退出登录
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </header>
 
