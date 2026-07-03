@@ -1,56 +1,62 @@
 {
   "profile": {
-    "name": "Yorlg",
+    "avatar": "/avatar.png",
     "bio": "欢迎来到我的个人主页.",
-    "avatar": "/avatar.png"
+    "name": "NSV"
   },
+  "projectSections": [
+    {
+      "id": "projects",
+      "projects": [
+        {
+          "description": "基于 xterm.js 开发的 Web SSH 终端。",
+          "icon": "TerminalSquare",
+          "id": "webssh",
+          "title": "WebSSH",
+          "url": "https://github.com/Yorlg/WebSSH"
+        }
+      ],
+      "title": "Projects"
+    }
+  ],
   "socialLinks": [
     {
+      "icon": "Github",
       "id": "github",
       "platform": "GitHub",
-      "url": "https://github.com/Yorlg",
-      "icon": "Github"
+      "url": "https://github.com/nsv2051"
     },
     {
+      "icon": "Mail",
       "id": "email",
       "platform": "Email",
-      "url": "mailto:i@yorlg.net",
-      "icon": "Mail"
+      "url": "mailto:insv@msn.com"
     },
     {
+      "icon": "Twitter",
       "id": "x",
       "platform": "Twitter",
-      "url": "https://x.com/Yorlg233",
-      "icon": "Twitter"
+      "url": "https://x.com/elonmusk"
     },
     {
+      "icon": "Send",
       "id": "telegram",
       "platform": "Telegram",
-      "url": "https://t.me/Yorlg233",
-      "icon": "Send"
+      "url": "https://t.me/nsv_2051"
     }
   ],
   "websiteLinks": [
     {
+      "description": "我的小本本",
       "id": "blog",
       "title": "博客",
-      "url": "https://blog.yorlg.it/",
-      "description": "我的小本本"
-    }
-  ],
-  "projectSections": [
+      "url": "https://blog.nnn.cx/"
+    },
     {
-      "id": "projects",
-      "title": "Projects",
-      "projects": [
-        {
-          "id": "webssh",
-          "title": "WebSSH",
-          "url": "https://github.com/Yorlg/WebSSH",
-          "description": "基于 xterm.js 开发的 Web SSH 终端。",
-          "icon": "TerminalSquare"
-        }
-      ]
+      "description": "云盘",
+      "id": "om",
+      "title": "云盘",
+      "url": "https://om.nnn.cx/"
     }
   ]
 }
