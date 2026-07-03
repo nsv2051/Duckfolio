@@ -3,6 +3,8 @@ import * as React from 'react';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
+import { addPendingMedia } from '@/lib/admin/pending-media';
+
 export interface UploadedFile<T = unknown> {
   appUrl?: string;
   key: string;
@@ -35,46 +37,30 @@ export function useUploadFile({
     setProgress(10);
 
     try {
-      const formData = new FormData();
+      const blobUrl = addPendingMedia(file);
 
-      formData.append('file', file);
-
-      const response = await fetch('/api/admin/media', {
-        body: formData,
-        headers: props.headers,
-        method: 'POST',
-      });
-
-      setProgress(85);
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'File upload failed.');
-      }
-
-      const uploaded = data.file as UploadedFile;
-
-      setUploadedFile(uploaded);
       setProgress(100);
 
+      const uploaded: UploadedFile = {
+        appUrl: blobUrl,
+        key: blobUrl,
+        name: file.name,
+        size: file.size,
+        type: file.type,
+        url: blobUrl,
+      };
+
+      setUploadedFile(uploaded);
       onUploadComplete?.(uploaded);
 
       return uploaded;
     } catch (error) {
       const errorMessage = getErrorMessage(error);
 
-      const message =
-        errorMessage.length > 0
-          ? errorMessage
-          : 'Something went wrong, please try again later.';
-
-      toast.error(message);
+      toast.error(errorMessage || 'Something went wrong, please try again later.');
 
       onUploadError?.(error);
 
-      // Mock upload for unauthenticated users
-      // toast.info('User not logged in. Mocking upload process.');
       const mockUploadedFile = {
         key: 'mock-key-0',
         appUrl: `https://mock-app-url.com/${file.name}`,
@@ -83,19 +69,6 @@ export function useUploadFile({
         type: file.type,
         url: URL.createObjectURL(file),
       } as UploadedFile;
-
-      // Simulate upload progress
-      let progress = 0;
-
-      const simulateProgress = async () => {
-        while (progress < 100) {
-          await new Promise((resolve) => setTimeout(resolve, 50));
-          progress += 2;
-          setProgress(Math.min(progress, 100));
-        }
-      };
-
-      await simulateProgress();
 
       setUploadedFile(mockUploadedFile);
 

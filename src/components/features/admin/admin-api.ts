@@ -1,3 +1,5 @@
+import { drainPendingMedia } from '@/lib/admin/pending-media';
+
 function getPayloadMessage(payload: unknown) {
   if (
     payload &&
@@ -70,4 +72,51 @@ export async function readAdminResponse<T>(
   }
 
   return payload as T;
+}
+
+export async function uploadPendingMediaAndRewriteContent(
+  content: string,
+  adminToken: string,
+): Promise<string> {
+  const pending = drainPendingMedia();
+
+  if (pending.size === 0) {
+    return content;
+  }
+
+  let rewritten = content;
+
+  for (const [blobUrl, file] of pending) {
+    if (!rewritten.includes(blobUrl)) {
+      URL.revokeObjectURL(blobUrl);
+      continue;
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const response = await fetch('/api/admin/media', {
+      body: formData,
+      headers: { 'x-admin-token': adminToken },
+      method: 'POST',
+    });
+
+    if (!response.ok) {
+      const data = (await response.json().catch(() => ({}))) as {
+        message?: string;
+      };
+      throw new Error(data.message || `媒体文件 ${file.name} 上传失败。`);
+    }
+
+    const data = (await response.json()) as { file?: { url?: string } };
+    const finalUrl = data.file?.url;
+
+    if (finalUrl) {
+      rewritten = rewritten.split(blobUrl).join(finalUrl);
+    }
+
+    URL.revokeObjectURL(blobUrl);
+  }
+
+  return rewritten;
 }

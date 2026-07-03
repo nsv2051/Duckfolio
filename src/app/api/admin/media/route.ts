@@ -1,6 +1,8 @@
 import {
   createUnauthorizedResponse,
+  deleteRepositoryMediaFile,
   isAdminAuthorized,
+  listRepositoryMedia,
   writeRepositoryBinaryFile,
 } from '@/lib/admin/content';
 
@@ -30,6 +32,25 @@ const allowedExtensions = new Set([
   'webp',
   'zip',
 ]);
+
+export async function GET(request: Request) {
+  if (!isAdminAuthorized(request)) {
+    return createUnauthorizedResponse();
+  }
+
+  try {
+    const files = await listRepositoryMedia();
+
+    return Response.json({ files });
+  } catch (error) {
+    return Response.json(
+      {
+        message: error instanceof Error ? error.message : '媒体列表读取失败。',
+      },
+      { status: 500 },
+    );
+  }
+}
 
 export async function POST(request: Request) {
   if (!isAdminAuthorized(request)) {
@@ -90,6 +111,37 @@ export async function POST(request: Request) {
     return Response.json(
       {
         message: error instanceof Error ? error.message : '文件上传失败。',
+      },
+      { status: 500 },
+    );
+  }
+}
+
+export async function DELETE(request: Request) {
+  if (!isAdminAuthorized(request)) {
+    return createUnauthorizedResponse();
+  }
+
+  try {
+    const mediaPath = new URL(request.url).searchParams.get('path');
+
+    if (!mediaPath) {
+      return Response.json(
+        { message: '请指定要删除的媒体路径。' },
+        { status: 400 },
+      );
+    }
+
+    const result = await deleteRepositoryMediaFile(mediaPath);
+
+    return Response.json({
+      message: '媒体文件已删除。',
+      result,
+    });
+  } catch (error) {
+    return Response.json(
+      {
+        message: error instanceof Error ? error.message : '媒体文件删除失败。',
       },
       { status: 500 },
     );
