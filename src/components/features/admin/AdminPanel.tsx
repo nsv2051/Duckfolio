@@ -13,6 +13,7 @@ import {
   ChevronDown,
   Globe2,
   Home,
+  ImageIcon,
   List,
   Lock,
   LogIn,
@@ -31,9 +32,13 @@ import {
 import type { ProfileConfig } from '@/types/platform-config';
 import { AdminNoticeStack } from './AdminNoticeStack';
 import { NavButton } from './AdminShared';
-import { readAdminResponse } from './admin-api';
+import {
+  readAdminResponse,
+  uploadPendingMediaAndRewriteContent,
+} from './admin-api';
 import { ConfigPanel } from './ConfigPanel';
 import { DashboardPanel } from './DashboardPanel';
+import { MediaPanel } from './MediaPanel';
 import { PostEditorPanel } from './PostEditorPanel';
 import { PostsPanel } from './PostsPanel';
 import type {
@@ -418,6 +423,10 @@ export function AdminPanel() {
     setIsPublishing(true);
 
     try {
+      const finalContent = await uploadPendingMediaAndRewriteContent(
+        post.content,
+        adminToken,
+      );
       const publishedDate = new Date(post.date || Date.now()).toISOString();
       const postTags = post.tags
         .split(/[,，]/)
@@ -426,7 +435,7 @@ export function AdminPanel() {
 
       const response = await fetch('/api/admin/posts', {
         body: JSON.stringify({
-          content: post.content,
+          content: finalContent,
           date: publishedDate,
           description: post.description,
           draft: post.draft,
@@ -654,6 +663,12 @@ export function AdminPanel() {
               onClick={() => setTab('posts')}
             />
             <NavButton
+              active={tab === 'media'}
+              icon={<ImageIcon size={18} />}
+              label="媒体资源"
+              onClick={() => setTab('media')}
+            />
+            <NavButton
               active={tab === 'config'}
               icon={<Settings2 size={18} />}
               label="站点配置"
@@ -685,6 +700,8 @@ export function AdminPanel() {
               onRefresh={loadPosts}
               onToggleVisibility={togglePostVisibility}
             />
+          ) : tab === 'media' ? (
+            <MediaPanel adminToken={adminToken} />
           ) : (
             <ConfigPanel
               config={config}

@@ -1,6 +1,6 @@
 import type { ProfileConfig } from '@/types/platform-config';
 
-export type Tab = 'home' | 'post' | 'posts' | 'config';
+export type Tab = 'home' | 'post' | 'posts' | 'media' | 'config';
 
 export interface AdminStatus {
   branch: string;
