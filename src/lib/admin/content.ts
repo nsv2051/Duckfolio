@@ -47,6 +47,14 @@ export interface RepositoryMediaFile {
   contentType: string;
 }
 
+export interface MediaFileSummary {
+  name: string;
+  path: string;
+  size: number;
+  type: string;
+  url: string;
+}
+
 export interface AdminStatus {
   branch: string;
   hasAdminPassword: boolean;
@@ -315,6 +323,32 @@ export async function readRepositoryMediaFile(
   }
 
   return readLocalMediaFile(filePath);
+}
+
+export async function listRepositoryMedia(): Promise<MediaFileSummary[]> {
+  const target = getRepositoryTarget();
+
+  if (target.mode === 'github') {
+    return listGitHubMedia(target);
+  }
+
+  return listLocalMedia();
+}
+
+export async function deleteRepositoryMediaFile(
+  mediaPath: string,
+): Promise<WriteFileResult> {
+  const filePath = toContentMediaPath(mediaPath);
+  const target = getRepositoryTarget();
+
+  if (target.mode === 'github') {
+    return deleteGitHubFile(target, {
+      filePath,
+      message: `chore: delete media ${path.basename(filePath)}`,
+    });
+  }
+
+  throw new Error('未配置 GitHub 写入，已阻止在本地模式下删除媒体文件。');
 }
 
 async function writeLocalFile({
@@ -599,6 +633,105 @@ async function listGitHubPosts(
   );
 }
 
+const mediaCategories = ['photos', 'videos', 'audio', 'files'] as const;
+
+async function listGitHubMedia(
+  target: Extract<RepositoryTarget, { mode: 'github' }>,
+): Promise<MediaFileSummary[]> {
+  const results: MediaFileSummary[] = [];
+
+  for (const category of mediaCategories) {
+    const categoryPath = `content/media/${category}`;
+    const yearDirs = await githubRequest<GitHubContentItem[] | null>(
+      target,
+      `/contents/${categoryPath}?ref=${encodeURIComponent(target.branch)}`,
+      { allowNotFound: true },
+    );
+
+    if (!Array.isArray(yearDirs)) continue;
+
+    for (const yearDir of yearDirs) {
+      if (yearDir.type !== 'dir') continue;
+
+      const encodedYear = yearDir.path
+        .split('/')
+        .map(encodeURIComponent)
+        .join('/');
+      const files = await githubRequest<GitHubContentItem[] | null>(
+        target,
+        `/contents/${encodedYear}?ref=${encodeURIComponent(target.branch)}`,
+        { allowNotFound: true },
+      );
+
+      if (!Array.isArray(files)) continue;
+
+      for (const file of files) {
+        if (file.type !== 'file') continue;
+
+        const mediaPath = `${category}/${yearDir.name}/${file.name}`;
+
+        results.push({
+          name: file.name,
+          path: mediaPath,
+          size: file.size ?? 0,
+          type: getContentType(file.name),
+          url: `/media/${mediaPath}`,
+        });
+      }
+    }
+  }
+
+  return results.sort((a, b) => b.name.localeCompare(a.name));
+}
+
+async function listLocalMedia(): Promise<MediaFileSummary[]> {
+  const results: MediaFileSummary[] = [];
+  const mediaRoot = path.join(process.cwd(), 'content', 'media');
+
+  for (const category of mediaCategories) {
+    const categoryDir = path.join(mediaRoot, category);
+
+    let yearDirs: string[];
+
+    try {
+      yearDirs = await fs.readdir(categoryDir);
+    } catch {
+      continue;
+    }
+
+    for (const year of yearDirs) {
+      const yearDir = path.join(categoryDir, year);
+
+      let files: string[];
+
+      try {
+        files = await fs.readdir(yearDir);
+      } catch {
+        continue;
+      }
+
+      for (const fileName of files) {
+        const filePath = path.join(yearDir, fileName);
+        const stat = await fs.stat(filePath).catch(() => null);
+
+        if (!stat?.isFile()) continue;
+
+        const mediaPath = `${category}/${year}/${fileName}`;
+
+        results.push({
+          name: fileName,
+          path: mediaPath,
+          size: stat.size,
+          type: getContentType(fileName),
+          url: `/media/${mediaPath}`,
+        });
+      }
+    }
+  }
+
+  return results.sort((a, b) => b.name.localeCompare(a.name));
+}
+
 async function githubRequest<T>(
   target: Extract<RepositoryTarget, { mode: 'github' }>,
   endpoint: string,
@@ -638,6 +771,7 @@ interface GitHubContentItem {
   name: string;
   path: string;
   sha?: string;
+  size?: number;
   type: string;
   updated_at?: string;
 }
