@@ -61,12 +61,15 @@ export function getAllPosts(): BlogPost[] {
 
 export function getPostBySlug(slug: string): BlogPost | null {
   try {
+    // URL decode the slug to handle encoded characters (e.g. Chinese)
+    const decodedSlug = decodeURIComponent(slug);
+
     // 防止目录遍历攻击
-    if (slug.includes('/') || slug.includes('..')) {
+    if (decodedSlug.includes('/') || decodedSlug.includes('..')) {
       return null;
     }
 
-    const fullPath = path.join(postsDirectory, `${slug}.md`);
+    const fullPath = path.join(postsDirectory, `${decodedSlug}.md`);
     const fileContents = fs.readFileSync(fullPath, 'utf8');
     const { data, content } = matter(fileContents);
 
