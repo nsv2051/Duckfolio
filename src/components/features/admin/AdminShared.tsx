@@ -26,7 +26,7 @@ export function NavButton({
   return (
     <Button
       className={[
-        'h-auto w-full justify-start rounded-lg px-4 py-3 text-left text-sm transition-colors',
+        'h-auto min-w-0 w-full justify-start rounded-lg px-4 py-3 text-left text-sm transition-colors',
         active
           ? 'bg-[#121212] text-white hover:bg-[#121212] hover:text-white dark:bg-white dark:text-black dark:hover:bg-white dark:hover:text-black'
           : 'bg-transparent text-[#121212]/60 hover:bg-[#121212]/5 hover:text-[#121212] dark:bg-transparent dark:text-white/60 dark:hover:bg-white/10 dark:hover:text-white',

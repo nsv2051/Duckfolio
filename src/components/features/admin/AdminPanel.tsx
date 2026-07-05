@@ -604,7 +604,7 @@ export function AdminPanel() {
   }
 
   return (
-    <main className="min-h-screen bg-white text-[#121212] dark:bg-black dark:text-white">
+    <main className="min-h-screen overflow-x-hidden bg-white text-[#121212] dark:bg-black dark:text-white">
       <Toaster closeButton richColors position="top-center" />
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 pb-16 pt-6 md:px-8 md:pt-8">
         <header className="flex flex-col gap-4 border-b border-[#121212]/10 pb-6 dark:border-white/10 md:flex-row md:items-end md:justify-between">
@@ -615,10 +615,10 @@ export function AdminPanel() {
             <h1 className="mt-2 text-3xl font-semibold">内容管理</h1>
           </div>
 
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-            <div className="inline-flex items-center gap-2 rounded border border-[#121212]/10 px-3 py-2 text-sm text-[#121212]/60 dark:border-white/10 dark:text-white/60">
-              <Globe2 size={16} />
-              {targetText}
+          <div className="flex items-center gap-3">
+            <div className="inline-flex min-w-0 flex-1 items-center gap-2 rounded border border-[#121212]/10 px-3 py-2 text-sm text-[#121212]/60 dark:border-white/10 dark:text-white/60">
+              <Globe2 size={16} className="shrink-0" />
+              <span className="truncate">{targetText}</span>
             </div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -648,8 +648,8 @@ export function AdminPanel() {
 
         <AdminNoticeStack notices={notices} />
 
-        <div className="grid gap-6 lg:grid-cols-[220px_minmax(0,1fr)]">
-          <aside className="flex gap-2 lg:flex-col">
+        <div className="flex flex-col gap-6 md:flex-row">
+          <aside className="grid min-w-0 grid-cols-2 gap-2 md:w-[220px] md:shrink-0 md:grid-cols-1 md:self-start">
             <NavButton
               active={tab === 'home'}
               icon={<BarChart3 size={18} />}
@@ -676,6 +676,7 @@ export function AdminPanel() {
             />
           </aside>
 
+          <div className="min-w-0 flex-1">
           {tab === 'home' ? (
             <DashboardPanel isLoading={isLoadingPosts} posts={posts} />
           ) : tab === 'post' ? (
@@ -710,6 +711,7 @@ export function AdminPanel() {
               onSave={saveConfig}
             />
           )}
+          </div>
         </div>
       </div>
     </main>
