@@ -28,7 +28,7 @@ export function NavButton({
       className={[
         'h-auto min-w-0 w-full justify-start rounded-lg px-4 py-3 text-left text-sm transition-colors',
         active
-          ? 'bg-[#121212] text-white hover:bg-[#121212] hover:text-white dark:bg-white dark:text-black dark:hover:bg-white dark:hover:text-black'
+          ? 'bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground dark:bg-primary dark:text-primary-foreground dark:hover:bg-primary dark:hover:text-primary-foreground'
           : 'bg-transparent text-[#121212]/60 hover:bg-[#121212]/5 hover:text-[#121212] dark:bg-transparent dark:text-white/60 dark:hover:bg-white/10 dark:hover:text-white',
       ].join(' ')}
       type="button"
@@ -41,7 +41,13 @@ export function NavButton({
   );
 }
 
-export function Field({ children, label }: { children: ReactNode; label: string }) {
+export function Field({
+  children,
+  label,
+}: {
+  children: ReactNode;
+  label: string;
+}) {
   return (
     <div className="grid gap-2">
       <span className="text-sm text-[#121212]/50 dark:text-white/50">
