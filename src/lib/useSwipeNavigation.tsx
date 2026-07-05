@@ -41,8 +41,6 @@ export function useSwipeNavigation() {
     startX: number;
     startY: number;
     startTarget: Element | null;
-    locked: boolean; // 方向已锁定
-    isHorizontal: boolean; // 锁定为水平方向
   } | null>(null);
 
   const activeSection = useMemo(() => {
@@ -87,25 +85,7 @@ export function useSwipeNavigation() {
         startX: touch.clientX,
         startY: touch.clientY,
         startTarget: document.elementFromPoint(touch.clientX, touch.clientY),
-        locked: false,
-        isHorizontal: false,
       };
-    };
-
-    const handleTouchMove = (e: TouchEvent) => {
-      const state = touchRef.current;
-      if (!state) return;
-
-      // 方向锁定：移动超过 10px 后判断方向
-      if (!state.locked) {
-        const touch = e.touches[0];
-        const dx = Math.abs(touch.clientX - state.startX);
-        const dy = Math.abs(touch.clientY - state.startY);
-        if (dx > 10 || dy > 10) {
-          state.locked = true;
-          state.isHorizontal = dx > dy;
-        }
-      }
     };
 
     const handleTouchEnd = (e: TouchEvent) => {
@@ -113,19 +93,25 @@ export function useSwipeNavigation() {
       if (!state) return;
       touchRef.current = null;
 
-      // 只处理水平方向的滑动
-      if (!state.locked || !state.isHorizontal) return;
-
       // 如果起始于可水平滚动的元素，不触发
       if (isInHorizontalScrollable(state.startTarget)) return;
 
       const touch = e.changedTouches[0];
       const deltaX = touch.clientX - state.startX;
-      const threshold = window.innerWidth * 0.5;
+      const deltaY = touch.clientY - state.startY;
+      const absX = Math.abs(deltaX);
+      const absY = Math.abs(deltaY);
 
-      if (deltaX < -threshold) {
+      // 水平位移必须大于垂直位移（确保是横向滑动意图）
+      if (absX < absY) return;
+
+      // 水平距离需超过屏幕宽度的 40%
+      const threshold = window.innerWidth * 0.4;
+      if (absX < threshold) return;
+
+      if (deltaX < 0) {
         navigate('left');
-      } else if (deltaX > threshold) {
+      } else {
         navigate('right');
       }
     };
@@ -133,12 +119,10 @@ export function useSwipeNavigation() {
     document.addEventListener('touchstart', handleTouchStart, {
       passive: true,
     });
-    document.addEventListener('touchmove', handleTouchMove, { passive: true });
     document.addEventListener('touchend', handleTouchEnd, { passive: true });
 
     return () => {
       document.removeEventListener('touchstart', handleTouchStart);
-      document.removeEventListener('touchmove', handleTouchMove);
       document.removeEventListener('touchend', handleTouchEnd);
     };
   }, [isMobile, isBlogPost, navigate]);
