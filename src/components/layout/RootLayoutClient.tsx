@@ -14,7 +14,7 @@ interface RootLayoutClientProps {
 }
 
 export function RootLayoutClient({ children }: RootLayoutClientProps) {
-  const { dragProps } = useSwipeNavigation();
+  useSwipeNavigation();
   const pathname = usePathname();
   const { profile } = useProfileStore();
   const isAdmin = pathname.startsWith('/admin');
@@ -30,7 +30,6 @@ export function RootLayoutClient({ children }: RootLayoutClientProps) {
             ? 'mx-0 px-0'
             : 'mx-auto px-4 sm:px-6 md:w-4/5 md:px-8 lg:w-3/4 xl:w-2/3',
         )}
-        {...(isAdmin ? {} : dragProps)}
       >
         <motion.div
           key={pathname}
