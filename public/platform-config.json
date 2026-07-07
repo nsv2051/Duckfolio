@@ -9,11 +9,11 @@
       "id": "projects",
       "projects": [
         {
-          "description": "基于 xterm.js 开发的 Web SSH 终端。",
-          "icon": "TerminalSquare",
-          "id": "webssh",
-          "title": "WebSSH",
-          "url": "https://github.com/Yorlg/WebSSH"
+          "description": "常用脚本合集",
+          "icon": "Code2",
+          "id": "scripts",
+          "title": "Scripts",
+          "url": "https://github.com/nsv2051/scripts"
         }
       ],
       "title": "Projects"
