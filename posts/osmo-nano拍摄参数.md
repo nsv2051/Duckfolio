@@ -1,7 +1,6 @@
 ---
 title: "Osmo NANO拍摄参数"
 date: "2026-07-09T05:57:00.000Z"
-draft: true
 ---
 
 演唱会现场
